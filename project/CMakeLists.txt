@@ -16,7 +16,11 @@ add_subdirectory(libs/glm)
 include_directories(libs/glm)
 
 # Proje ana dosyalarını ekle
-add_executable(Ft_vox main.cpp)
+file(GLOB_RECURSE SRC_FILES src/*.cpp)
+
+include_directories(inc)
+add_executable(Ft_vox ${SRC_FILES})
+
 
 # SDL2, Vulkan ve GLM ile linkle
 target_link_libraries(Ft_vox ${SDL2_LIBRARIES} Vulkan::Vulkan glm)

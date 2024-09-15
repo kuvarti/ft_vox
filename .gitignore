@@ -34,4 +34,5 @@
 # Custom
 project/libs
 project/build
+build
 .vscode

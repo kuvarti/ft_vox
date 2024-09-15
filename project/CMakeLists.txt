@@ -1,22 +1,48 @@
 cmake_minimum_required(VERSION 3.10)
-project(FTVox)
 
-# C++ 17 standardı kullanılıyor
+# Proje adı
+project(Ft_vox)
+
+# C++ standardı
 set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Vulkan SDK'yı bul
-find_package(Vulkan REQUIRED)
+# Dosya dizinlerini belirtelim
+set(SOURCE_DIR "${PROJECT_SOURCE_DIR}/src")
+set(INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
+set(LIBS_DIR "${PROJECT_SOURCE_DIR}/libs")
 
-# SDL2'yi bul
+# Kaynak ve header dosyalarını otomatik ekleyelim
+file(GLOB_RECURSE SOURCES "${SOURCE_DIR}/*.cpp")
+file(GLOB_RECURSE HEADERS "${INCLUDE_DIR}/*.hpp")
+
+# İkili dosya hedefi oluşturalım
+add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
+
+# Include dizinlerini ekleyelim
+target_include_directories(${PROJECT_NAME} PRIVATE ${INCLUDE_DIR})
+target_include_directories(${PROJECT_NAME} PRIVATE ${LIBS_DIR}/glm)
+
+# SDL2 kütüphanesini bulup ekleyelim
 find_package(SDL2 REQUIRED)
-include_directories(${SDL2_INCLUDE_DIRS})
+if (SDL2_FOUND)
+    include_directories(${SDL2_INCLUDE_DIRS})
+    target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
+else()
+    message(FATAL_ERROR "SDL2 not found!")
+endif()
 
-# GLM'yi projeye dahil et
-add_subdirectory(libs/glm)
-include_directories(libs/glm)
+# Vulkan kütüphanesini bulup ekleyelim
+find_package(Vulkan REQUIRED)
+if (Vulkan_FOUND)
+    target_include_directories(${PROJECT_NAME} PRIVATE ${Vulkan_INCLUDE_DIRS})
+    target_link_libraries(${PROJECT_NAME} Vulkan::Vulkan)
+else()
+    message(FATAL_ERROR "Vulkan not found!")
+endif()
 
-# Proje ana dosyalarını ekle
-add_executable(Ft_vox main.cpp)
+# glm kütüphanesini manuel olarak ekleyelim
+target_include_directories(${PROJECT_NAME} PRIVATE ${LIBS_DIR}/glm)
 
-# SDL2, Vulkan ve GLM ile linkle
-target_link_libraries(Ft_vox ${SDL2_LIBRARIES} Vulkan::Vulkan glm)
+# Derleme çıktısını daha temiz tutmak için
+set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)

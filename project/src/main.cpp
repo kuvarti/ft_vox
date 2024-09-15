@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
 	}
 
 	// SDL penceresi oluşturuluyor
-	SDL_Window *window = SDL_CreateWindow("SDL2 ve Vulkan Test",
+	SDL_Window *window = SDL_CreateWindow("SDL2 ve Vulkan Test 1",
 										  SDL_WINDOWPOS_CENTERED,
 										  SDL_WINDOWPOS_CENTERED,
 										  800, 600,

@@ -13,8 +13,8 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "§5 NOTES/2024-09-15 - Ahmet.md",
-                "mode": "source",
+                "file": "§2 PROJECT/HowToRun.md",
+                "mode": "preview",
                 "source": false
               }
             }
@@ -99,7 +99,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "§5 NOTES/2024-09-15 - Ahmet.md",
+                "file": "§2 PROJECT/HowToRun.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -116,7 +116,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "§5 NOTES/2024-09-15 - Ahmet.md",
+                "file": "§2 PROJECT/HowToRun.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -139,7 +139,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "§5 NOTES/2024-09-15 - Ahmet.md"
+                "file": "§2 PROJECT/HowToRun.md"
               }
             }
           }
@@ -162,10 +162,10 @@
       "obsidian-kanban:Create new board": false
     }
   },
-  "active": "72a1734f00709395",
+  "active": "5b800c885fa6aa0d",
   "lastOpenFiles": [
-    "§4 AREA/General ToDo List.md",
     "§5 NOTES/2024-09-15 - Ahmet.md",
+    "§4 AREA/General ToDo List.md",
     "§6 ARCHIVES",
     "§5 NOTES",
     "§4 AREA/Untitled.canvas"

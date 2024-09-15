@@ -4,8 +4,10 @@ kanban-plugin: board
 
 ---
 
-## Deneme
+## ToDo
 
+- [ ] Flat World - Fatih
+- [ ] [[Proce... Generate - Ahmet]]
 
 
 ## On Working
@@ -24,6 +26,6 @@ kanban-plugin: board
 
 %% kanban:settings
 ```
-{"kanban-plugin":"board","list-collapse":[false,false,false,false]}
+{"kanban-plugin":"board","list-collapse":[false,false,false,false],"show-checkboxes":true,"full-list-lane-width":true}
 ```
 %%

@@ -4,17 +4,29 @@
     "type": "split",
     "children": [
       {
-        "id": "b32d1dfb34f501ae",
+        "id": "700234e01ac055b5",
         "type": "tabs",
         "children": [
           {
-            "id": "5b800c885fa6aa0d",
+            "id": "e2ef300108b372b1",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "§2 PROJECT/HowToRun.md",
-                "mode": "preview",
+                "file": "§2 PROJECT/Project Subject.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "4dc11a8bc7250bd1",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "§3 RESOURCES/Proc.Gen.Algos/Dot Product.md",
+                "mode": "source",
                 "source": false
               }
             }
@@ -99,7 +111,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "§2 PROJECT/HowToRun.md",
+                "file": "§3 RESOURCES/en.subject.pdf",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -116,7 +128,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "§2 PROJECT/HowToRun.md",
+                "file": "§3 RESOURCES/en.subject.pdf",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -139,7 +151,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "§2 PROJECT/HowToRun.md"
+                "file": "§3 RESOURCES/en.subject.pdf"
               }
             }
           }
@@ -162,10 +174,56 @@
       "obsidian-kanban:Create new board": false
     }
   },
-  "active": "5b800c885fa6aa0d",
+  "floating": {
+    "id": "42f752b9536b6730",
+    "type": "floating",
+    "children": [
+      {
+        "id": "18f63672f4e81162",
+        "type": "window",
+        "children": [
+          {
+            "id": "f46534c09f7bf686",
+            "type": "tabs",
+            "children": [
+              {
+                "id": "76885ff87238823b",
+                "type": "leaf",
+                "state": {
+                  "type": "pdf",
+                  "state": {
+                    "file": "§3 RESOURCES/en.subject.pdf"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "direction": "vertical",
+        "x": 541,
+        "y": 184,
+        "width": 1024,
+        "height": 800,
+        "maximize": true,
+        "zoom": 0
+      }
+    ]
+  },
+  "active": "76885ff87238823b",
   "lastOpenFiles": [
-    "§5 NOTES/2024-09-15 - Ahmet.md",
+    "§2 PROJECT/Project Subject.md",
+    "§3 RESOURCES/en.subject.pdf",
+    "§4 AREA/CanbanNotes/Proce... Generate - Ahmet.md",
     "§4 AREA/General ToDo List.md",
+    "§3 RESOURCES/Proc.Gen.Algos/Simplex Noise.md",
+    "§2 PROJECT/HowToRun.md",
+    "§3 RESOURCES/Proc.Gen.Algos/Perlin Noise.md",
+    "§4 AREA/CanbanNotes",
+    "§3 RESOURCES/Proc.Gen.Algos/Dot Product.md",
+    "Dot_Product.md",
+    "§3 RESOURCES/Proc.Gen.Algos/Fractal Noise.md",
+    "§3 RESOURCES/Proc.Gen.Algos",
+    "§5 NOTES/2024-09-15 - Ahmet.md",
     "§6 ARCHIVES",
     "§5 NOTES",
     "§4 AREA/Untitled.canvas"

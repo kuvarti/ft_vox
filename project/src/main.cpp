@@ -1,9 +1,4 @@
-#define SDL_MAIN_HANDLED
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_vulkan.h>
-#include <vulkan/vulkan.h>
-#include <iostream>
-#include <vector>
+#include "global.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -55,11 +50,7 @@ int main(int argc, char *argv[])
 	if (!SDL_Vulkan_GetInstanceExtensions(window, &extensionCount, extensions.data()))
 	{
 		std::cerr << "SDL Vulkan uzantıları alınamadı (veri ile): " << SDL_GetError() << std::endl;
-		SDL_DestroyWindow(window);
-		SDL_Quit();
-		return -1;
 	}
-
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(extensions.size());
 	createInfo.ppEnabledExtensionNames = extensions.data();
 

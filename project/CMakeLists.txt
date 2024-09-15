@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Dosya dizinlerini belirtelim
 set(SOURCE_DIR "${PROJECT_SOURCE_DIR}/src")
-set(INCLUDE_DIR "${PROJECT_SOURCE_DIR}/include")
+set(INCLUDE_DIR "${PROJECT_SOURCE_DIR}/inc")
 set(LIBS_DIR "${PROJECT_SOURCE_DIR}/libs")
 
 # Kaynak ve header dosyalarını otomatik ekleyelim
@@ -46,3 +46,8 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${LIBS_DIR}/glm)
 
 # Derleme çıktısını daha temiz tutmak için
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+# Ekstra derleyici uyarılarını ekleyelim (opsiyonel)
+# if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+#     target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)
+# endif

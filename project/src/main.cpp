@@ -1,6 +1,7 @@
 #include "global.hpp"
 #include "perlinNoise.hpp"
 
+void deneme();
 int main(int argc, char *argv[])
 {
 	if (SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -36,7 +37,6 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	PerlinNoise p;
 	Uint32* pixels = new Uint32[800 * 600];
 	for (size_t x = 0; x < 800; x++) {
 		for (size_t y = 0; y < 600; y++) {
@@ -44,21 +44,22 @@ int main(int argc, char *argv[])
 			float freq = 1;
 			float amp = 1;
 			for (int i = 0; i < 12; i++) {
-				val += p.perlin(x * freq / GRID_SIZE, y * freq / GRID_SIZE) * amp;
+				val += perlin(x * freq / GRID_SIZE, y * freq / GRID_SIZE) * amp;
 				freq *= 2;
 				amp /= 2;
 			}
 			val *= 1.2;
-			if (val > 1.0f)
-				val = 1.0f;
-			else if (val < -1.0f)
-				val = -1.0f;
+			if (val > 1.5f)
+				val = 1.5f;
+			else if (val < -0.5f)
+				val = -0.5f;
 			int color = (int)(((val + 1.0f) * 0.5f) * 255);
-			pixels[y * 800 + x] = (color << 24) | (color << 16) | (color << 8) | color;
+			pixels[y * 800 + x] = (color << 24) | val <= 1.0f ? (color << 16) : 0 << 16 | (color << 8) | color;
 		}
 	}
 	SDL_UpdateTexture(texture, NULL, pixels, 800 * sizeof(Uint32));
 
+	deneme();
 	bool isRunning = true;
 	SDL_Event event;
 	while (isRunning)

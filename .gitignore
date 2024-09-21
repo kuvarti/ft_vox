@@ -36,3 +36,4 @@ project/libs
 project/build
 build
 .vscode
+*.log

@@ -1,11 +1,127 @@
 #include "VulkanApp.hpp"
-
 void VulkanApp::run()
 {
 	initWindow();
 	initVulkan();
 	mainLoop();
 	cleanup();
+}
+
+void VulkanApp::initWindow()
+{
+	if (SDL_Init(SDL_INIT_VIDEO) != 0)
+	{
+		throw std::runtime_error("Failed to initialize SDL");
+	}
+
+	window = SDL_CreateWindow("Vulkan", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_VULKAN);
+	if (!window)
+	{
+		throw std::runtime_error("Failed to create SDL window");
+	}
+}
+
+void VulkanApp::initVulkan()
+{
+	createInstance();
+
+	if (!SDL_Vulkan_CreateSurface(window, instance, &surface))
+	{
+		throw std::runtime_error("Failed to create Vulkan surface");
+	}
+
+	pickPhysicalDevice();
+	createLogicalDevice();
+	createSwapChain();
+	createImageViews();
+	createRenderPass();
+	createDescriptorSetLayout();
+	createGraphicsPipeline();
+	createFramebuffers();
+
+	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
+	poolInfo.queueFamilyIndex = 0; // Replace with actual queue family index
+
+	if (vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS)
+	{
+		throw std::runtime_error("Failed to create command pool");
+	}
+
+	createVertexBuffer();
+	createIndexBuffer();
+	createUniformBuffer();
+	createDescriptorPool();
+	createDescriptorSets();
+	createCommandBuffers();
+	createSyncObjects();
+}
+
+void VulkanApp::mainLoop()
+{
+	bool quit = false;
+	SDL_Event event;
+
+	while (!quit)
+	{
+		while (SDL_PollEvent(&event))
+		{
+			if (event.type == SDL_QUIT)
+			{
+				quit = true;
+			}
+		}
+		keyboardHandler.processInput();
+		updateUniformBuffer();
+		drawFrame();
+	}
+
+	vkDeviceWaitIdle(device);
+}
+
+void VulkanApp::cleanup()
+{
+	cleanupSwapChain();
+
+	vkDestroyDescriptorPool(device, descriptorPool, nullptr);
+	vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
+	vkDestroyBuffer(device, indexBuffer, nullptr);
+	vkFreeMemory(device, indexBufferMemory, nullptr);
+	vkDestroyBuffer(device, vertexBuffer, nullptr);
+	vkFreeMemory(device, vertexBufferMemory, nullptr);
+	vkDestroyBuffer(device, uniformBuffer, nullptr);
+	vkFreeMemory(device, uniformBufferMemory, nullptr);
+
+	for (size_t i = 0; i < imageAvailableSemaphores.size(); i++)
+	{
+		vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
+		vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
+		vkDestroyFence(device, inFlightFences[i], nullptr);
+	}
+
+	vkDestroyCommandPool(device, commandPool, nullptr);
+	vkDestroyDevice(device, nullptr);
+
+	if (window)
+	{
+		SDL_DestroyWindow(window);
+	}
+	SDL_Quit();
+}
+
+void VulkanApp::updateUniformBuffer()
+{
+	UniformBufferObject ubo = {};
+	glm::vec3 rotation = keyboardHandler.getRotation();
+	ubo.model = glm::rotate(glm::mat4(1.0f), rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
+	ubo.model = glm::rotate(ubo.model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
+	ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+	ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 10.0f);
+	ubo.proj[1][1] *= -1;
+
+	void *data;
+	vkMapMemory(device, uniformBufferMemory, 0, sizeof(ubo), 0, &data);
+	memcpy(data, &ubo, sizeof(ubo));
+	vkUnmapMemory(device, uniformBufferMemory);
 }
 
 void VulkanApp::createDescriptorPool()
@@ -115,47 +231,6 @@ void VulkanApp::createUniformBuffer()
 	vkBindBufferMemory(device, uniformBuffer, uniformBufferMemory, 0);
 }
 
-void VulkanApp::updateUniformBuffer()
-{
-	UniformBufferObject ubo = {};
-	ubo.model = glm::rotate(glm::mat4(1.0f), rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	ubo.model = glm::rotate(ubo.model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 10.0f);
-	ubo.proj[1][1] *= -1;
-
-	void *data;
-	vkMapMemory(device, uniformBufferMemory, 0, sizeof(ubo), 0, &data);
-	memcpy(data, &ubo, sizeof(ubo));
-	vkUnmapMemory(device, uniformBufferMemory);
-}
-
-void VulkanApp::processInput()
-{
-	const Uint8 *state = SDL_GetKeyboardState(NULL);
-
-	if (state[SDL_SCANCODE_A])
-	{
-		// Rotate left
-		rotation.y -= glm::radians(1.0f);
-	}
-	if (state[SDL_SCANCODE_D])
-	{
-		// Rotate right
-		rotation.y += glm::radians(1.0f);
-	}
-	if (state[SDL_SCANCODE_W])
-	{
-		// Rotate up
-		rotation.x -= glm::radians(1.0f);
-	}
-	if (state[SDL_SCANCODE_S])
-	{
-		// Rotate down
-		rotation.x += glm::radians(1.0f);
-	}
-}
-
 void VulkanApp::createIndexBuffer()
 {
 	VkBufferCreateInfo bufferInfo = {};
@@ -241,124 +316,7 @@ uint32_t VulkanApp::findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags pr
 
 	throw std::runtime_error("Failed to find suitable memory type");
 }
-std::vector<char> readFile(const std::string &filename)
-{
-	std::ifstream file(filename, std::ios::ate | std::ios::binary);
 
-	if (!file.is_open())
-	{
-		throw std::runtime_error("Failed to open file: " + filename);
-	}
-
-	size_t fileSize = (size_t)file.tellg();
-	std::vector<char> buffer(fileSize);
-
-	file.seekg(0);
-	file.read(buffer.data(), fileSize);
-
-	file.close();
-	return buffer;
-}
-void VulkanApp::initWindow()
-{
-	if (SDL_Init(SDL_INIT_VIDEO) != 0)
-	{
-		throw std::runtime_error("Failed to initialize SDL");
-	}
-
-	window = SDL_CreateWindow("Vulkan", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_VULKAN);
-	if (!window)
-	{
-		throw std::runtime_error("Failed to create SDL window");
-	}
-}
-
-void VulkanApp::initVulkan()
-{
-	createInstance();
-
-	if (!SDL_Vulkan_CreateSurface(window, instance, &surface))
-	{
-		throw std::runtime_error("Failed to create Vulkan surface");
-	}
-
-	pickPhysicalDevice();
-	createLogicalDevice();
-	createSwapChain();
-	createImageViews();
-	createRenderPass();
-	createDescriptorSetLayout();
-	createGraphicsPipeline();
-	createFramebuffers();
-
-	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
-	poolInfo.queueFamilyIndex = 0; // Replace with actual queue family index
-
-	if (vkCreateCommandPool(device, &poolInfo, nullptr, &commandPool) != VK_SUCCESS)
-	{
-		throw std::runtime_error("Failed to create command pool");
-	}
-
-	createVertexBuffer();
-	createIndexBuffer();
-	createUniformBuffer();
-	createDescriptorPool();
-	createDescriptorSets();
-	createCommandBuffers();
-	createSyncObjects();
-}
-
-void VulkanApp::mainLoop()
-{
-	bool quit = false;
-	SDL_Event event;
-
-	while (!quit)
-	{
-		while (SDL_PollEvent(&event))
-		{
-			if (event.type == SDL_QUIT)
-			{
-				quit = true;
-			}
-		}
-		processInput();
-		updateUniformBuffer();
-		drawFrame();
-	}
-
-	vkDeviceWaitIdle(device);
-}
-
-void VulkanApp::cleanup()
-{
-	cleanupSwapChain();
-
-	vkDestroyDescriptorPool(device, descriptorPool, nullptr);
-	vkDestroyDescriptorSetLayout(device, descriptorSetLayout, nullptr);
-	vkDestroyBuffer(device, indexBuffer, nullptr);
-	vkFreeMemory(device, indexBufferMemory, nullptr);
-	vkDestroyBuffer(device, vertexBuffer, nullptr);
-	vkFreeMemory(device, vertexBufferMemory, nullptr);
-	vkDestroyBuffer(device, uniformBuffer, nullptr);
-	vkFreeMemory(device, uniformBufferMemory, nullptr);
-
-	for (size_t i = 0; i < imageAvailableSemaphores.size(); i++)
-	{
-		vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
-		vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
-		vkDestroyFence(device, inFlightFences[i], nullptr);
-	}
-
-	vkDestroyCommandPool(device, commandPool, nullptr);
-	vkDestroyDevice(device, nullptr);
-
-	if (window)
-	{
-		SDL_DestroyWindow(window);
-	}
-	SDL_Quit();
-}
 void VulkanApp::cleanupSwapChain()
 {
 	for (auto framebuffer : swapChainFramebuffers)
@@ -404,11 +362,6 @@ void VulkanApp::recreateSwapChain()
 
 void VulkanApp::createInstance()
 {
-	if (enableValidationLayers && !checkValidationLayerSupport())
-	{
-		throw std::runtime_error("Validation layers requested, but not available!");
-	}
-
 	VkApplicationInfo appInfo = {};
 	appInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
 	appInfo.pApplicationName = "Vulkan Cube";
@@ -435,52 +388,11 @@ void VulkanApp::createInstance()
 	createInfo.enabledExtensionCount = static_cast<uint32_t>(sdlExtensions.size());
 	createInfo.ppEnabledExtensionNames = sdlExtensions.data();
 
-	if (enableValidationLayers)
-	{
-		createInfo.enabledLayerCount = static_cast<uint32_t>(validationLayers.size());
-		createInfo.ppEnabledLayerNames = validationLayers.data();
-	}
-	else
-	{
-		createInfo.enabledLayerCount = 0;
-	}
-
 	if (vkCreateInstance(&createInfo, nullptr, &instance) != VK_SUCCESS)
 	{
 		throw std::runtime_error("Failed to create Vulkan instance");
 	}
 }
-
-bool VulkanApp::checkValidationLayerSupport()
-{
-	uint32_t layerCount;
-	vkEnumerateInstanceLayerProperties(&layerCount, nullptr);
-
-	std::vector<VkLayerProperties> availableLayers(layerCount);
-	vkEnumerateInstanceLayerProperties(&layerCount, availableLayers.data());
-
-	for (const char *layerName : validationLayers)
-	{
-		bool layerFound = false;
-
-		for (const auto &layerProperties : availableLayers)
-		{
-			if (strcmp(layerName, layerProperties.layerName) == 0)
-			{
-				layerFound = true;
-				break;
-			}
-		}
-
-		if (!layerFound)
-		{
-			return false;
-		}
-	}
-
-	return true;
-}
-
 
 void VulkanApp::pickPhysicalDevice()
 {
@@ -659,6 +571,25 @@ void VulkanApp::createRenderPass()
 	}
 }
 
+std::vector<char> VulkanApp::readFile(const std::string &filename)
+{
+	std::ifstream file(filename, std::ios::ate | std::ios::binary);
+
+	if (!file.is_open())
+	{
+		throw std::runtime_error("Failed to open file: " + filename);
+	}
+
+	size_t fileSize = (size_t)file.tellg();
+	std::vector<char> buffer(fileSize);
+
+	file.seekg(0);
+	file.read(buffer.data(), fileSize);
+
+	file.close();
+	return buffer;
+}
+
 void VulkanApp::createGraphicsPipeline()
 {
 	auto vertShaderCode = readFile("shaders/vert.spv");
@@ -727,7 +658,7 @@ void VulkanApp::createGraphicsPipeline()
 	rasterizer.sType = VK_STRUCTURE_TYPE_PIPELINE_RASTERIZATION_STATE_CREATE_INFO;
 	rasterizer.depthClampEnable = VK_FALSE;
 	rasterizer.rasterizerDiscardEnable = VK_FALSE;
-	rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
+	rasterizer.polygonMode = VK_POLYGON_MODE_LINE; // Set to wireframe mode
 	rasterizer.lineWidth = 1.0f;
 	rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
 	rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
@@ -854,10 +785,6 @@ void VulkanApp::createCommandBuffers()
 		renderPassInfo.framebuffer = swapChainFramebuffers[i];
 		renderPassInfo.renderArea.offset = {0, 0};
 		renderPassInfo.renderArea.extent = swapChainExtent;
-
-		VkClearValue clearColor = {{0.0f, 0.0f, 0.0f, 1.0f}};
-		renderPassInfo.clearValueCount = 1;
-		renderPassInfo.pClearValues = &clearColor;
 
 		vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 		vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);

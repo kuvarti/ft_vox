@@ -12,40 +12,62 @@
 #include <set>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include "KeyboardHandler.hpp"
+#include <array>
 
-#include "global.hpp"
+const int WIDTH = 800;
+const int HEIGHT = 600;
 
-class VulkanApp
-{
+const int MAX_FRAMES_IN_FLIGHT = 2;
+
+class VulkanApp {
 public:
 	void run();
 
 private:
-	struct UniformBufferObject
-	{
+	void initWindow();
+	void initVulkan();
+	void mainLoop();
+	void cleanup();
+	void createInstance();
+	void createSurface();
+	void pickPhysicalDevice();
+	void createLogicalDevice();
+	void createSwapChain();
+	void createImageViews();
+	void createRenderPass();
+	void createDescriptorSetLayout();
+	void createGraphicsPipeline();
+	void createFramebuffers();
+	void createCommandPool();
+	void createVertexBuffer();
+	void createIndexBuffer();
+	void createUniformBuffer();
+	void createDescriptorPool();
+	void createDescriptorSets();
+	void createCommandBuffers();
+	void createSyncObjects();
+	void updateUniformBuffer();
+	void drawFrame();
+	bool checkValidationLayerSupport();
+	std::vector<const char*> getRequiredExtensions();
+	bool isDeviceSuitable(VkPhysicalDevice device);
+	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
+	void cleanupSwapChain();
+	void recreateSwapChain();
+	VkShaderModule createShaderModule(const std::vector<char> &code);
+	static std::vector<char> readFile(const std::string& filename);
+
+	struct UniformBufferObject {
 		glm::mat4 model;
 		glm::mat4 view;
 		glm::mat4 proj;
 	};
-	struct Vertex
-	{
+
+	struct Vertex {
 		glm::vec3 position;
 	};
-	// cube
-	const std::vector<uint16_t> indices = {
-		// Front face
-		0, 1, 2, 2, 3, 0,
-		// Back face
-		4, 5, 6, 6, 7, 4,
-		// Top face
-		3, 2, 6, 6, 7, 3,
-		// Bottom face
-		0, 1, 5, 5, 4, 0,
-		// Right face
-		1, 5, 6, 6, 2, 1,
-		// Left face
-		0, 4, 7, 7, 3, 0};
-
 
 	const std::vector<Vertex> vertices = {
 		// Front face
@@ -60,51 +82,22 @@ private:
 		{{-0.5f, 0.5f, -0.5f}},
 	};
 
-	void initWindow();
-	void initVulkan();
-	void mainLoop();
-	void cleanup();
-	void createDescriptorPool();
-	void createDescriptorSetLayout();
-	void createUniformBuffer();
-	void updateUniformBuffer();
-	void processInput();
-	void createDescriptorSets();
-	void createTextureImage();
-	void createTextureImageView();
-	void createTextureSampler();
-	void createImage(uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage &image, VkDeviceMemory &imageMemory);
-	void transitionImageLayout(VkImage image, VkFormat format, VkImageLayout oldLayout, VkImageLayout newLayout);
-	void copyBufferToImage(VkBuffer buffer, VkImage image, uint32_t width, uint32_t height);
-	void createVertexBuffer();
-	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
-	void createIndexBuffer();
-	void createUniformBuffers();
-	VkShaderModule createShaderModule(const std::vector<char> &code);
-	void createFramebuffers();
-	void createCommandBuffers();
-	void createSyncObjects();
-	void updateUniformBuffer(uint32_t currentImage);
-	void drawFrame();
-	void recreateSwapChain();
-	void cleanupSwapChain();
-	void createInstance();
-	void setupDebugMessenger();
-	void createSurface();
-	void pickPhysicalDevice();
-	void createLogicalDevice();
-	void createRenderPass();
-	void createGraphicsPipeline();
-	bool isDeviceSuitable(VkPhysicalDevice device);
+	const std::vector<uint16_t> indices = {
+		// Front face
+		0, 1, 2, 2, 3, 0,
+		// Back face
+		4, 5, 6, 6, 7, 4,
+		// Left face
+		4, 0, 3, 3, 7, 4,
+		// Right face
+		1, 5, 6, 6, 2, 1,
+		// Top face
+		3, 2, 6, 6, 7, 3,
+		// Bottom face
+		4, 5, 1, 1, 0, 4,
+	};
 
-	void createSwapChain();
-	bool checkValidationLayerSupport();
-
-	void createImageViews();
-
-	VkBuffer indexBuffer;
-	VkDeviceMemory indexBufferMemory;
-	SDL_Window *window;
+	SDL_Window* window;
 	VkInstance instance;
 	VkSurfaceKHR surface;
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
@@ -117,33 +110,28 @@ private:
 	VkExtent2D swapChainExtent;
 	std::vector<VkImageView> swapChainImageViews;
 	VkRenderPass renderPass;
+	VkDescriptorSetLayout descriptorSetLayout;
 	VkPipelineLayout pipelineLayout;
 	VkPipeline graphicsPipeline;
 	std::vector<VkFramebuffer> swapChainFramebuffers;
-	VkCommandPoolCreateInfo poolInfo = {};
 	VkCommandPool commandPool;
+	VkBuffer vertexBuffer;
+	VkDeviceMemory vertexBufferMemory;
+	VkBuffer indexBuffer;
+	VkDeviceMemory indexBufferMemory;
+	VkBuffer uniformBuffer;
+	VkDeviceMemory uniformBufferMemory;
+	VkDescriptorPool descriptorPool;
+	std::vector<VkDescriptorSet> descriptorSets;
 	std::vector<VkCommandBuffer> commandBuffers;
 	std::vector<VkSemaphore> imageAvailableSemaphores;
 	std::vector<VkSemaphore> renderFinishedSemaphores;
 	std::vector<VkFence> inFlightFences;
-	bool framebufferResized = false;
 	size_t currentFrame = 0;
-	VkBuffer uniformBuffer;
-
-	VkImageView createImageView(VkImage image, VkFormat format, VkImageAspectFlags aspectFlags);
-	VkDescriptorSetLayout descriptorSetLayout;
-	VkDescriptorPool descriptorPool;
-	std::vector<VkDescriptorSet> descriptorSets;
-	const std::vector<const char *> validationLayers = {
-		"VK_LAYER_KHRONOS_validation"};
-
-	const std::vector<const char *> deviceExtensions = {
-		VK_KHR_SWAPCHAIN_EXTENSION_NAME};
-	glm::vec3 rotation = glm::vec3(0.0f);
-
-#ifdef NDEBUG
-	const bool enableValidationLayers = false;
-#else
-	const bool enableValidationLayers = true;
-#endif
+	KeyboardHandler keyboardHandler;
+	const std::vector<const char*> deviceExtensions = {
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME
+	};
+	VkCommandPoolCreateInfo poolInfo = {};
+	
 };

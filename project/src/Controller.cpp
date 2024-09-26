@@ -1,6 +1,6 @@
-#include "KeyboardHandler.hpp"
+#include "Controller.hpp"
 
-void KeyboardHandler::processInput() {
+void Controller::processInput() {
     const Uint8* state = SDL_GetKeyboardState(NULL);
 
     if (state[SDL_SCANCODE_A]) {
@@ -17,7 +17,7 @@ void KeyboardHandler::processInput() {
     }
 }
 
-void KeyboardHandler::handleMouseMotion(int xrel, int yrel) {
+void Controller::handleMouseMotion(int xrel, int yrel) {
     rotation.y += xrel * rotationSpeed;
     rotation.x -= yrel * rotationSpeed;
 }

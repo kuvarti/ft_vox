@@ -12,8 +12,9 @@
 #include <set>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "KeyboardHandler.hpp"
 #include <array>
+
+#include "Controller.hpp"
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
@@ -128,7 +129,7 @@ private:
 	std::vector<VkSemaphore> renderFinishedSemaphores;
 	std::vector<VkFence> inFlightFences;
 	size_t currentFrame = 0;
-	KeyboardHandler keyboardHandler;
+	Controller controller;
 	const std::vector<const char*> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	};

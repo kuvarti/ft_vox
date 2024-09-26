@@ -19,6 +19,7 @@ void VulkanApp::initWindow()
 	{
 		throw std::runtime_error("Failed to create SDL window");
 	}
+	SDL_SetRelativeMouseMode(SDL_TRUE); // Capture mouse
 }
 
 void VulkanApp::initVulkan()
@@ -69,6 +70,10 @@ void VulkanApp::mainLoop()
 			{
 				quit = true;
 			}
+			else if (event.type == SDL_MOUSEMOTION) 
+			{
+                keyboardHandler.handleMouseMotion(event.motion.xrel, event.motion.yrel);
+            }
 		}
 		keyboardHandler.processInput();
 		updateUniformBuffer();
@@ -108,20 +113,21 @@ void VulkanApp::cleanup()
 	SDL_Quit();
 }
 
-void VulkanApp::updateUniformBuffer()
-{
-	UniformBufferObject ubo = {};
-	glm::vec3 rotation = keyboardHandler.getRotation();
-	ubo.model = glm::rotate(glm::mat4(1.0f), rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
-	ubo.model = glm::rotate(ubo.model, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
-	ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
-	ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 10.0f);
-	ubo.proj[1][1] *= -1;
+void VulkanApp::updateUniformBuffer() {
+    UniformBufferObject ubo = {};
+    glm::vec3 rotation = keyboardHandler.getRotation();
+    glm::vec3 position = keyboardHandler.getPosition();
+    ubo.model = glm::translate(glm::mat4(1.0f), position);
+    ubo.model = glm::rotate(ubo.model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
+    ubo.model = glm::rotate(ubo.model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));
+    ubo.view = glm::lookAt(glm::vec3(2.0f, 2.0f, 2.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    ubo.proj = glm::perspective(glm::radians(45.0f), swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 10.0f);
+    ubo.proj[1][1] *= -1;
 
-	void *data;
-	vkMapMemory(device, uniformBufferMemory, 0, sizeof(ubo), 0, &data);
-	memcpy(data, &ubo, sizeof(ubo));
-	vkUnmapMemory(device, uniformBufferMemory);
+    void *data;
+    vkMapMemory(device, uniformBufferMemory, 0, sizeof(ubo), 0, &data);
+    memcpy(data, &ubo, sizeof(ubo));
+    vkUnmapMemory(device, uniformBufferMemory);
 }
 
 void VulkanApp::createDescriptorPool()

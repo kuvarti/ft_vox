@@ -3,9 +3,9 @@
 #include <SDL2/SDL.h>
 #include <glm/glm.hpp>
 
-class KeyboardHandler {
+class Controller {
 public:
-    KeyboardHandler() 
+    Controller() 
         : rotation(0.0f), position(0.0f), lastMousePosition(0.0f), 
           movementSpeed(0.1f), rotationSpeed(0.001f) {}
 

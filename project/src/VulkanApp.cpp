@@ -72,10 +72,10 @@ void VulkanApp::mainLoop()
 			}
 			else if (event.type == SDL_MOUSEMOTION) 
 			{
-                keyboardHandler.handleMouseMotion(event.motion.xrel, event.motion.yrel);
+                controller.handleMouseMotion(event.motion.xrel, event.motion.yrel);
             }
 		}
-		keyboardHandler.processInput();
+		controller.processInput();
 		updateUniformBuffer();
 		drawFrame();
 	}
@@ -115,8 +115,8 @@ void VulkanApp::cleanup()
 
 void VulkanApp::updateUniformBuffer() {
     UniformBufferObject ubo = {};
-    glm::vec3 rotation = keyboardHandler.getRotation();
-    glm::vec3 position = keyboardHandler.getPosition();
+    glm::vec3 rotation = controller.getRotation();
+    glm::vec3 position = controller.getPosition();
     ubo.model = glm::translate(glm::mat4(1.0f), position);
     ubo.model = glm::rotate(ubo.model, glm::radians(rotation.x), glm::vec3(1.0f, 0.0f, 0.0f));
     ubo.model = glm::rotate(ubo.model, glm::radians(rotation.y), glm::vec3(0.0f, 1.0f, 0.0f));

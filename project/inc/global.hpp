@@ -17,5 +17,6 @@ namespace std {
 }
 
 void deneme();
+Uint32 *newRender(int x);
 
 //8704

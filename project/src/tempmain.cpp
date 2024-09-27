@@ -1,4 +1,4 @@
-#include "perlinNoise.hpp"
+#include "chunk.hpp"
 #include "global.hpp"
 #include <unordered_map>
 #include <chrono>
@@ -29,4 +29,41 @@ void	deneme() {
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
 	std::cout << "Total number of chunks: " << Chunks.size() << std::endl;
 	std::cout << "Time taken: " << duration << " milliseconds" << std::endl;
+}
+
+void fill4x4(Uint32 *a, int x, int y, int color){
+	for (size_t i = x; i < x + 8; i++)
+	{
+		for (size_t j = y; j < y + 8; j++)
+		{
+			a[i * 800 + j] = (color << 24) | (color << 16) | (color << 8) | color;
+		}
+	}
+}
+
+void mapfree(int **m) {
+	for (size_t i = 0; i < 16; i++) {
+		delete[] m[i];
+	}
+	delete[] m;
+}
+
+Uint32 *newRender(int x) {
+	Uint32* pixels = new Uint32[800 * 800];
+	int **map1 = cellular(x);
+	int **map2;
+	for (size_t i = 0, px = 100; i < 16; i++, px += 8)
+	{
+		map2 = cellular((int)i);
+		for (size_t y = 0, py = 0; y < 70; y++, py += 8)
+		{
+			if (map1[x][y] == 1 && map2[x][y] == 1)
+				fill4x4(pixels, py, px, 255);
+			else
+				fill4x4(pixels, py, px, 0);
+		}
+		mapfree(map2);
+	}
+	mapfree(map1);
+	return pixels;
 }

@@ -1,4 +1,5 @@
-#include "perlinNoise.hpp"
+#include "ProceduralGenerationAlgorithms.hpp"
+#include "chunk.hpp"
 
 Vector2D randomGradient(int ix, int iy) {
 	const unsigned w = 8 * sizeof(unsigned);

@@ -1,4 +1,4 @@
-#include "perlinNoise.hpp"
+#include "chunk.hpp"
 #include "iostream"
 
 Chunk::Chunk() {
@@ -60,6 +60,20 @@ void Chunk::_GenerateTerrain() {
 		for (size_t y = 0; y < _length; y++) //0
 		{
 			calcPerlin(_voxel[x][y], _startPoint.Get_x() + x, _startPoint.Get_y() + y);
+		}
+	}
+}
+
+void Chunk::_GenerateCave() {
+	// cellular();
+	for (size_t x = 0; x < _length; x++) //0
+	{
+		for (size_t z = 0; z < _length; z++) //0
+		{
+			for (size_t x = 30; x < 100; x++)
+			{
+				/* code */
+			}
 		}
 	}
 }

@@ -1,5 +1,5 @@
 #include "global.hpp"
-#include "perlinNoise.hpp"
+#include "chunk.hpp"
 
 void deneme();
 int main(int argc, char *argv[])
@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 	}
 
 	SDL_Window *window = SDL_CreateWindow("SDL2 ve Vulkan Test 1",
-		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 600,
+		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 800,
 		SDL_WINDOW_VULKAN | SDL_WINDOW_SHOWN);
 	if (!window)
 	{
@@ -37,29 +37,10 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
-	Uint32* pixels = new Uint32[800 * 600];
-	for (size_t x = 0; x < 800; x++) {
-		for (size_t y = 0; y < 600; y++) {
-			float val = 0;
-			float freq = 1;
-			float amp = 1;
-			for (int i = 0; i < 12; i++) {
-				val += perlin(x * freq / GRID_SIZE, y * freq / GRID_SIZE) * amp;
-				freq *= 2;
-				amp /= 2;
-			}
-			val *= 1.2;
-			if (val > 1.5f)
-				val = 1.5f;
-			else if (val < -0.5f)
-				val = -0.5f;
-			int color = (int)(((val + 1.0f) * 0.5f) * 255);
-			pixels[y * 800 + x] = (color << 24) | val <= 1.0f ? (color << 16) : 0 << 16 | (color << 8) | color;
-		}
-	}
-	SDL_UpdateTexture(texture, NULL, pixels, 800 * sizeof(Uint32));
+	int x = 0, lx = 1;
 
-	deneme();
+
+	// deneme();
 	bool isRunning = true;
 	SDL_Event event;
 	while (isRunning)
@@ -70,12 +51,31 @@ int main(int argc, char *argv[])
 			{
 				isRunning = false;
 			}
+			if (event.type == SDL_KEYDOWN){
+				if(event.key.keysym.sym == SDLK_ESCAPE)
+					isRunning = false;
+				else if(event.key.keysym.sym == SDLK_UP)
+					x++;
+				else if(event.key.keysym.sym == SDLK_DOWN)
+					x--;
+			}
+		}
+
+		if (x < 0) x = 0;
+		if (x >= 16) x = 15;
+		if (x != lx) {
+			lx = x;
+			Uint32* pixels = newRender(x);
+			SDL_UpdateTexture(texture, NULL, pixels, 800 * sizeof(Uint32));
+			delete pixels;
 		}
 
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 		SDL_RenderClear(renderer);
 		SDL_RenderCopy(renderer, texture, NULL, NULL);
 		SDL_RenderPresent(renderer);
+
+		SDL_Delay(300);
 	}
 
 	SDL_DestroyWindow(window);

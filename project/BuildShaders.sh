@@ -1,1 +1,1 @@
-rm -f shaders/*.spv && glslangValidator -V shaders/frag.frag -o shaders/frag.spv && glslangValidator -V shaders/vert.vert -o shaders/vert.spv
+rm -f shaders/*.spv && glslangValidator -V shaders/frag_fill.frag -o shaders/frag_fill.spv && glslangValidator -V shaders/vert.vert -o shaders/vert.spv && glslangValidator -V shaders/frag_wireframe.frag -o shaders/frag_wireframe.spv

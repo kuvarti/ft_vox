@@ -38,6 +38,11 @@ void Controller::handleMouseMotion(int xrel, int yrel) {
     // rotation.x -= yrel * rotationSpeed;
 }
 
+void Controller::setStartPoint(const glm::vec3& startPosition, const glm::vec3& startRotation) {
+    position = startPosition;
+    rotation = startRotation;
+}
+
 glm::vec3 Controller::getForwardVector() const {
     glm::vec3 forward;
     forward.x = cos(glm::radians(rotation.y)) * cos(glm::radians(rotation.x));

@@ -12,6 +12,7 @@ public:
 
     void processInput();
     void handleMouseMotion(int xrel, int yrel);
+    void setStartPoint(const glm::vec3& startPosition, const glm::vec3& startRotation);
 
     glm::vec3 getRotation() const {
         return rotation;

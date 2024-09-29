@@ -24,6 +24,7 @@ void VulkanApp::initWindow()
 
 void VulkanApp::initVulkan()
 {
+	controller.setStartPoint(glm::vec3(0.0f, 1.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	createInstance();
 
 	if (!SDL_Vulkan_CreateSurface(window, instance, &surface))
@@ -98,8 +99,8 @@ void VulkanApp::cleanup()
 
 	for (size_t i = 0; i < imageAvailableSemaphores.size(); i++)
 	{
-		vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
 		vkDestroySemaphore(device, imageAvailableSemaphores[i], nullptr);
+		vkDestroySemaphore(device, renderFinishedSemaphores[i], nullptr);
 		vkDestroyFence(device, inFlightFences[i], nullptr);
 	}
 

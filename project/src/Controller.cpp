@@ -10,14 +10,20 @@ void Controller::processInput() {
         position.x += movementSpeed;
     }
     if (state[SDL_SCANCODE_W]) {
-        position.z -= movementSpeed;
+        position.y -= movementSpeed;
     }
     if (state[SDL_SCANCODE_S]) {
+        position.y += movementSpeed;
+    }
+    if (state[SDL_SCANCODE_Q]) {
+        position.z -= movementSpeed;
+    }
+    if (state[SDL_SCANCODE_E]) {
         position.z += movementSpeed;
     }
 }
 
 void Controller::handleMouseMotion(int xrel, int yrel) {
-    rotation.y += xrel * rotationSpeed;
-    rotation.x -= yrel * rotationSpeed;
+    // rotation.y += xrel * rotationSpeed;
+    // rotation.x -= yrel * rotationSpeed;
 }

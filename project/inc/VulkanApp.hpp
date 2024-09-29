@@ -15,6 +15,7 @@
 #include <array>
 
 #include "Controller.hpp"
+#include "CubeModel.hpp"
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
@@ -50,6 +51,10 @@ private:
 	void createSyncObjects();
 	void updateUniformBuffer();
 	void drawFrame();
+	void createDepthResources();
+	VkFormat findDepthFormat();
+	VkFormat findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
+	bool hasStencilComponent(VkFormat format);
 	bool checkValidationLayerSupport();
 	std::vector<const char*> getRequiredExtensions();
 	bool isDeviceSuitable(VkPhysicalDevice device);
@@ -63,39 +68,11 @@ private:
 	struct UniformBufferObject {
 		glm::mat4 model;
 		glm::mat4 view;
-		glm::mat4 proj;
+		glm::mat4 projection;
 	};
 
 	struct Vertex {
 		glm::vec3 position;
-	};
-
-	const std::vector<Vertex> vertices = {
-		// Front face
-		{{-0.5f, -0.5f, 0.5f}},
-		{{0.5f, -0.5f, 0.5f}},
-		{{0.5f, 0.5f, 0.5f}},
-		{{-0.5f, 0.5f, 0.5f}},
-		// Back face
-		{{-0.5f, -0.5f, -0.5f}},
-		{{0.5f, -0.5f, -0.5f}},
-		{{0.5f, 0.5f, -0.5f}},
-		{{-0.5f, 0.5f, -0.5f}},
-	};
-
-	const std::vector<uint16_t> indices = {
-		// Front face
-		0, 1, 2, 2, 3, 0,
-		// Back face
-		4, 5, 6, 6, 7, 4,
-		// Left face
-		4, 0, 3, 3, 7, 4,
-		// Right face
-		1, 5, 6, 6, 2, 1,
-		// Top face
-		3, 2, 6, 6, 7, 3,
-		// Bottom face
-		4, 5, 1, 1, 0, 4,
 	};
 
 	SDL_Window* window;
@@ -113,7 +90,6 @@ private:
 	VkRenderPass renderPass;
 	VkDescriptorSetLayout descriptorSetLayout;
 	VkPipelineLayout pipelineLayout;
-	VkPipeline graphicsPipeline;
 	std::vector<VkFramebuffer> swapChainFramebuffers;
 	VkCommandPool commandPool;
 	VkBuffer vertexBuffer;
@@ -130,9 +106,11 @@ private:
 	std::vector<VkFence> inFlightFences;
 	size_t currentFrame = 0;
 	Controller controller;
+	CubeModel cubeModel;
 	const std::vector<const char*> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME
 	};
 	VkCommandPoolCreateInfo poolInfo = {};
-	
+	VkPipeline fillPipeline;
+    VkPipeline wireframePipeline;
 };

@@ -22,7 +22,8 @@ const int HEIGHT = 600;
 
 const int MAX_FRAMES_IN_FLIGHT = 2;
 
-class VulkanApp {
+class VulkanApp
+{
 public:
 	void run();
 
@@ -56,26 +57,28 @@ private:
 	VkFormat findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 	bool hasStencilComponent(VkFormat format);
 	bool checkValidationLayerSupport();
-	std::vector<const char*> getRequiredExtensions();
+	std::vector<const char *> getRequiredExtensions();
 	bool isDeviceSuitable(VkPhysicalDevice device);
-	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& bufferMemory);
+	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer &buffer, VkDeviceMemory &bufferMemory);
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 	void cleanupSwapChain();
 	void recreateSwapChain();
 	VkShaderModule createShaderModule(const std::vector<char> &code);
-	static std::vector<char> readFile(const std::string& filename);
+	static std::vector<char> readFile(const std::string &filename);
 
-	struct UniformBufferObject {
+	struct UniformBufferObject
+	{
 		glm::mat4 model;
 		glm::mat4 view;
 		glm::mat4 projection;
 	};
 
-	struct Vertex {
+	struct Vertex
+	{
 		glm::vec3 position;
 	};
 
-	SDL_Window* window;
+	SDL_Window *window;
 	VkInstance instance;
 	VkSurfaceKHR surface;
 	VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
@@ -107,10 +110,9 @@ private:
 	size_t currentFrame = 0;
 	Controller controller;
 	CubeModel cubeModel;
-	const std::vector<const char*> deviceExtensions = {
-		VK_KHR_SWAPCHAIN_EXTENSION_NAME
-	};
+	const std::vector<const char *> deviceExtensions = {
+		VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 	VkCommandPoolCreateInfo poolInfo = {};
 	VkPipeline fillPipeline;
-    VkPipeline wireframePipeline;
+	VkPipeline wireframePipeline;
 };

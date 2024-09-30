@@ -1,4 +1,5 @@
 run: build
+	@mkdir -p build
 	@cmake --build build
 	@./build/bin/Ft_vox
 

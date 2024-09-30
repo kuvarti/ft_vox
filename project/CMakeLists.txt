@@ -32,12 +32,12 @@ else()
     message(FATAL_ERROR "SDL2 not found!")
 endif()
 
-find_package(SDL2_ttf REQUIRED)
-if (SDL2_TTF_FOUND)
+find_package(SDL_ttf REQUIRED)
+if (SDL_TTF_FOUND)
     include_directories(${SDL2_INCLUDE_DIRS})
     target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARIES})
 else()
-    message(FATAL_ERROR "SDL2 not found!")
+    message(FATAL_ERROR "SDL_TTF not found!")
 endif()
 
 

@@ -1,40 +1,31 @@
 #pragma once
 
-#include "vector2D.hpp"
-#include "ProceduralGenerationAlgorithms.hpp"
-#include "voxel.hpp"
-#include <math.h>
+#include "worldGen.hpp"
 
-#define GRID_SIZE	128
-#define CHUNK_SIZE	16
+#define GRID_SIZE 128
+#define CHUNK_SIZE 16
 
-class Chunk {
+class Chunk : public TerrainGen, public CaveGen
+{
 public:
 	Chunk();
 	Chunk(Vector2D);
 	Chunk(float, float);
 	~Chunk();
 
-	Voxel	GetVoxelbyLocalCoordinate(Vector2D) const;
+	void ChangeStartPosition(Vector2D);
 	Voxel	GetVoxelbyGlobalCoordinate(Vector2D) const;
-	void	_GenerateTerrain(); //todo this gonna be private
-	int	***_GenerateCave(); //todo this gonna be private
+	int ***_GenerateCave(); // todo this gonna be private
 
-	void	Set_StartPoint(Vector2D v) {
-		_startPoint.Set_x(v.Get_x());
-		_startPoint.Set_y(v.Get_y());
-	}
-	void	Set_StartPoint(float x, float y) {
-		_startPoint.Set_x(x);
-		_startPoint.Set_y(y);
+	void PrintVoxelInfo();
+
+protected:
+	void Generate(Vector2D v) override
+	{
+		TerrainGen::Generate(v);
 	}
 
-	void	PrintVoxelInfo();
 private:
-	Vector2D	_startPoint;
-	Voxel		**_voxel;
-	int			_length;
-
+	Vector2D _startPoint;
+	int _length;
 };
-
-float mapRangeWithZero(float x, float x_min, float x_max, float y_min, float y_max);

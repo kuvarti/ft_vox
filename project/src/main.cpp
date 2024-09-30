@@ -69,6 +69,7 @@ int main(int argc, char *argv[])
 			Uint32* pixels = newRender(x);
 			SDL_UpdateTexture(texture, NULL, pixels, 800 * sizeof(Uint32));
 			delete pixels;
+			printf("X: %d\n", x);
 		}
 
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);

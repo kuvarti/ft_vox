@@ -3,7 +3,8 @@
 #include <unordered_map>
 #include <chrono>
 
-void	deneme() {
+void deneme()
+{
 	const int start = -8192;
 	const int end = 8192;
 	const int step = 16;
@@ -12,17 +13,22 @@ void	deneme() {
 	std::unordered_map<std::tuple<int, int>, Chunk *> Chunks;
 
 	bool overlapFound = false;
-	for (int x = start; x <= end; x += step) {
-		for (int y = start; y <= end; y += step) {
+	for (int x = start; x <= end; x += step)
+	{
+		for (int y = start; y <= end; y += step)
+		{
 			auto currentCoord = std::make_tuple(x, y);
-			if (Chunks.find(currentCoord) != Chunks.end()) {
+			if (Chunks.find(currentCoord) != Chunks.end())
+			{
 				std::cout << "Overlap found at (" << x << ", " << y << ")" << std::endl;
 				overlapFound = true;
 				break;
-			} else {
+			}
+			else
+			{
 				// Chunks.insert_or_assign(std::make_tuple(x/16, y/16), new Chunk(x, y));
 			}
-			std::cout << "Chunk at (" << x/16 + x%16 << ", " << y/16 + y%16 << ") ("<< x << ", " << y <<") Created" << std::endl;
+			std::cout << "Chunk at (" << x / 16 + x % 16 << ", " << y / 16 + y % 16 << ") (" << x << ", " << y << ") Created" << std::endl;
 		}
 	}
 	auto endTime = std::chrono::high_resolution_clock::now();
@@ -31,7 +37,8 @@ void	deneme() {
 	std::cout << "Time taken: " << duration << " milliseconds" << std::endl;
 }
 
-void fill4x4(Uint32 *a, int x, int y, int color){
+void fill4x4(Uint32 *a, int x, int y, int color)
+{
 	for (size_t i = x; i < x + 8; i++)
 	{
 		for (size_t j = y; j < y + 8; j++)
@@ -41,8 +48,10 @@ void fill4x4(Uint32 *a, int x, int y, int color){
 	}
 }
 
-void mapfree(int **m) {
-	for (size_t i = 0; i < 16; i++) {
+void mapfree(int **m)
+{
+	for (size_t i = 0; i < 16; i++)
+	{
 		delete[] m[i];
 	}
 	delete[] m;
@@ -68,17 +77,17 @@ void mapfree(int **m) {
 // 	return pixels;
 // }
 
-
-Uint32 *newRender(int x) {
-	Uint32* pixels = new Uint32[800 * 800];
-	Chunk a(320,320);
+Uint32 *newRender(int x)
+{
+	Uint32 *pixels = new Uint32[800 * 800];
+	Chunk a(320, 320);
 	int ***map = a._GenerateCave();
 	x++;
-	for (size_t y = 1, px = 100; y <= 16; y++, px +=8)
+	for (size_t y = 1, px = 100; y <= 16; y++, px += 8)
 	{
-		for (size_t z = 0, py = 1; z < 70; z++, py += 8)
+		for (size_t z = 0, py = 10; z < 70; z++, py += 8)
 		{
-			fill4x4(pixels, py, px, map[x][y][z] == 1 ? 255:0);
+			fill4x4(pixels, py, px, map[x][y][z] == 1 ? 255 : 0);
 		}
 	}
 	for (int i = 17; i >= 0; i--)

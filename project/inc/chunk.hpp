@@ -15,6 +15,7 @@ public:
 
 	void ChangeStartPosition(Vector2D);
 	Voxel	GetVoxelbyGlobalCoordinate(Vector2D) const;
+	Voxel	GetVoxelbyGlobalCoordinate(int, int) const;
 	int ***_GenerateCave(); // todo this gonna be private
 
 	void PrintVoxelInfo();

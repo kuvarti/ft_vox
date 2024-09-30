@@ -25,10 +25,14 @@ public:
 
 	Voxel GetVoxelByLocalCoordinate(Vector2D v) const
 	{
+		if (v.Get_x() > 15 || v.Get_y() > 15)
+			return Voxel(0,0,0);
 		return _map[(int)v.Get_x()][(int)v.Get_y()];
 	}
 	Voxel GetVoxelByLocalCoordinate(int x, int y) const
 	{
+		if (x > 15 || y > 15)
+			return Voxel(0,0,0);
 		return _map[x][y];
 	}
 

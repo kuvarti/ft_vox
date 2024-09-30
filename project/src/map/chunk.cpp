@@ -48,8 +48,22 @@ void Chunk::ChangeStartPosition(Vector2D v)
 
 Voxel Chunk::GetVoxelbyGlobalCoordinate(Vector2D v) const
 {
-	return GetVoxelByLocalCoordinate(Vector2D((int)_startPoint.Get_x() % _length + v.Get_x(),
-											  (int)_startPoint.Get_y() % _length + v.Get_y()));
+	if (v.Get_x() > _startPoint.Get_x() + _length || v.Get_x() < _startPoint.Get_x())
+		return Voxel(0,0,0);
+	else if(v.Get_y() > _startPoint.Get_y() + _length || v.Get_y() < _startPoint.Get_y())
+		return Voxel(0,0,0);
+	return GetVoxelByLocalCoordinate(Vector2D(((int)_startPoint.Get_x() % _length) + v.Get_x(),
+											  ((int)_startPoint.Get_y() % _length) + v.Get_y()));
+}
+
+Voxel Chunk::GetVoxelbyGlobalCoordinate(int x, int y) const
+{
+	if (x > _startPoint.Get_x() + _length || x < _startPoint.Get_x())
+		return Voxel(0,0,0);
+	else if(y > _startPoint.Get_y() + _length || y < _startPoint.Get_y())
+		return Voxel(0,0,0);
+	return GetVoxelByLocalCoordinate(Vector2D(((int)_startPoint.Get_x() % _length) + x,
+											  ((int)_startPoint.Get_y() % _length) + y));
 }
 
 void mapfree(int **m, size_t size)

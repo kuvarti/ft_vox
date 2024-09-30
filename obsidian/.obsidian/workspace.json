@@ -211,6 +211,41 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
+  "floating": {
+    "id": "42f752b9536b6730",
+    "type": "floating",
+    "children": [
+      {
+        "id": "18f63672f4e81162",
+        "type": "window",
+        "children": [
+          {
+            "id": "f46534c09f7bf686",
+            "type": "tabs",
+            "children": [
+              {
+                "id": "76885ff87238823b",
+                "type": "leaf",
+                "state": {
+                  "type": "pdf",
+                  "state": {
+                    "file": "§3 RESOURCES/en.subject.pdf"
+                  }
+                }
+              }
+            ]
+          }
+        ],
+        "direction": "vertical",
+        "x": 541,
+        "y": 184,
+        "width": 1024,
+        "height": 800,
+        "maximize": true,
+        "zoom": 0
+      }
+    ]
+  },
   "active": "e86afb01ed18f4ac",
   "lastOpenFiles": [
     "§2 PROJECT/HowToRun.md",

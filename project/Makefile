@@ -13,5 +13,3 @@ clean:
 
 fclean: clean
 	rm -rf libs
-
-re: clean build run

@@ -11,7 +11,7 @@ int randomVoxel(int iv, int iy) {
 	a ^= b << s | b >> w - s;
 	a *= 2048419325;
 
-	return (a < (0xffffffff * 0.35));
+	return (a < (0xffffffff * 0.2));
 }
 
 int GetSurroundingWallCount(int gridX, int gridY, int **map) {
@@ -43,20 +43,20 @@ void SmoothMap(int **map) {
 	}
 }
 
-int **cellular(int xmi) {
+int **cellular(int xmi, int size) {
 	// 70: caves can be => 30 <-> 100
 	int **map1;
-	map1 = new int*[16];
-	for (size_t i = 0; i < 16; i++)
+	map1 = new int*[size];
+	for (size_t i = 0; i < size; i++)
 		map1[i] = new int[70];
 
-	for (size_t x = xmi; x < xmi+16; x++)
+	for (size_t x = xmi; x < xmi+size; x++)
 	{
 		for (size_t y = 0; y < 70; y++)
 		{
 			map1[x - xmi][y] = randomVoxel(x, y + 30);
 		}
 	}
-	SmoothMap(map1);
+	// SmoothMap(map1);
 	return map1;
 }

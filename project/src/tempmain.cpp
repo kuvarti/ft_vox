@@ -48,22 +48,47 @@ void mapfree(int **m) {
 	delete[] m;
 }
 
+// Uint32 *newRender(int x) {
+// 	Uint32* pixels = new Uint32[800 * 800];
+// 	int **map1 = cellular(x, 16);
+// 	int **map2;
+// 	for (size_t i = 0, px = 100; i < 16; i++, px += 8)
+// 	{
+// 		map2 = cellular((int)i, 16);
+// 		for (size_t y = 0, py = 0; y < 70; y++, py += 8)
+// 		{
+// 			if (map1[x][y] == 1 && map2[x][y] == 1)
+// 				fill4x4(pixels, py, px, 255);
+// 			else
+// 				fill4x4(pixels, py, px, 0);
+// 		}
+// 		mapfree(map2);
+// 	}
+// 	mapfree(map1);
+// 	return pixels;
+// }
+
+
 Uint32 *newRender(int x) {
 	Uint32* pixels = new Uint32[800 * 800];
-	int **map1 = cellular(x);
-	int **map2;
-	for (size_t i = 0, px = 100; i < 16; i++, px += 8)
+	Chunk a(320,320);
+	int ***map = a._GenerateCave();
+	x++;
+	for (size_t y = 1, px = 100; y <= 16; y++, px +=8)
 	{
-		map2 = cellular((int)i);
-		for (size_t y = 0, py = 0; y < 70; y++, py += 8)
+		for (size_t z = 0, py = 1; z < 70; z++, py += 8)
 		{
-			if (map1[x][y] == 1 && map2[x][y] == 1)
-				fill4x4(pixels, py, px, 255);
-			else
-				fill4x4(pixels, py, px, 0);
+			fill4x4(pixels, py, px, map[x][y][z] == 1 ? 255:0);
 		}
-		mapfree(map2);
 	}
-	mapfree(map1);
+	for (int i = 17; i >= 0; i--)
+	{
+		for (int j = 17; j >= 0; j--)
+		{
+			delete[] map[i][j];
+		}
+		delete[] map[i];
+	}
+	delete[] map;
 	return pixels;
 }

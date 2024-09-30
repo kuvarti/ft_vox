@@ -38,7 +38,8 @@ int main(int argc, char *argv[])
 	}
 
 	int x = 0, lx = 1;
-
+	Chunk a;
+	a._GenerateCave();
 
 	// deneme();
 	bool isRunning = true;

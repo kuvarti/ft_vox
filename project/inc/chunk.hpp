@@ -18,7 +18,7 @@ public:
 	Voxel	GetVoxelbyLocalCoordinate(Vector2D) const;
 	Voxel	GetVoxelbyGlobalCoordinate(Vector2D) const;
 	void	_GenerateTerrain(); //todo this gonna be private
-	void	_GenerateCave(); //todo this gonna be private
+	int	***_GenerateCave(); //todo this gonna be private
 
 	void	Set_StartPoint(Vector2D v) {
 		_startPoint.Set_x(v.Get_x());

@@ -47,9 +47,21 @@
             "id": "e86afb01ed18f4ac",
             "type": "leaf",
             "state": {
-              "type": "excalidraw",
+              "type": "markdown",
               "state": {
-                "file": "Excalidraw/Drawing 2024-09-22 00.51.51.excalidraw.md"
+                "file": "§1 FLEETING/Config Dosyasi.md",
+                "mode": "source",
+                "source": true
+              }
+            }
+          },
+          {
+            "id": "0e32dd808cfb82f6",
+            "type": "leaf",
+            "state": {
+              "type": "pdf",
+              "state": {
+                "file": "§3 RESOURCES/en.subject.pdf"
               }
             }
           },
@@ -66,7 +78,7 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 4
       }
     ],
     "direction": "vertical"
@@ -146,7 +158,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Excalidraw/Drawing 2024-09-22 00.51.51.excalidraw.md",
+                "file": "§3 RESOURCES/en.subject.pdf",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -163,7 +175,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Excalidraw/Drawing 2024-09-22 00.51.51.excalidraw.md",
+                "file": "§3 RESOURCES/en.subject.pdf",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -186,7 +198,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Excalidraw/Drawing 2024-09-22 00.51.51.excalidraw.md"
+                "file": "§3 RESOURCES/en.subject.pdf"
               }
             }
           }
@@ -211,15 +223,18 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "e86afb01ed18f4ac",
+  "active": "0e32dd808cfb82f6",
   "lastOpenFiles": [
-    "§2 PROJECT/HowToRun.md",
+    "Excalidraw/Drawing 2024-09-27 14.42.12.excalidraw.md",
+    "Pasted Image 20240927145053_257.png",
+    "Pasted Image 20240927144949_485.png",
+    "§1 FLEETING/Config Dosyasi.md",
     "Excalidraw/Drawing 2024-09-22 00.51.51.excalidraw.md",
+    "§2 PROJECT/HowToRun.md",
     "§2 PROJECT/Proc.Gen/Untitled.md",
     "§2 PROJECT/Proc.Gen/Untitled",
     "§2 PROJECT/Project Subject.md",
     "§2 PROJECT/Proc.Gen",
-    "§1 FLEETING/Config Dosyasi.md",
     "§1 FLEETING/Calc terrain & Caves on threads.md",
     "§4 AREA/ChatGPT GorevPaylasimi.md",
     "Excalidraw/Drawing 2024-09-19 12.09.25.excalidraw.md",

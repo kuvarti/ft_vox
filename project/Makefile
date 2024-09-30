@@ -8,10 +8,10 @@ build:
 install:
 	@sh ./install.sh
 
-clean:
+clear:
 	rm -rf build
 
-fclean: clean
+fclean: clear
 	rm -rf libs
 
-re: clean build run
+re: clear build run

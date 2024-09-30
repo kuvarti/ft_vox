@@ -1,9 +1,9 @@
-run:
-	@cmake --build build 1>/dev/null
+run: build
+	@cmake --build build
 	@./build/bin/Ft_vox
 
-build: install
-	@cmake -B build -S .
+build:
+	@cmake -DCMAKE_BUILD_TYPE=Debug -B build -S .
 
 install:
 	@sh ./install.sh
@@ -13,5 +13,3 @@ clean:
 
 fclean: clean
 	rm -rf libs
-
-re: clean build run

@@ -47,6 +47,12 @@ target_include_directories(${PROJECT_NAME} PRIVATE ${LIBS_DIR}/glm)
 # Derleme çıktısını daha temiz tutmak için
 set_target_properties(${PROJECT_NAME} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+# Debug build'inde ekstra bayraklar eklemek için (isteğe bağlı)
+if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+    target_compile_options(${PROJECT_NAME} PRIVATE -g)
+endif()
+
+
 # Ekstra derleyici uyarılarını ekleyelim (opsiyonel)
 # if (CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 #     target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Wextra -Wpedantic)

@@ -1,4 +1,5 @@
 #include "global.hpp"
+#include "chunk.hpp"
 
 int main(int argc, char *argv[])
 {
@@ -73,8 +74,25 @@ int main(int argc, char *argv[])
 		SDL_Quit();
 		return -1;
 	}
-
 	std::cout << "SDL2 ve Vulkan başarılı bir şekilde çalışıyor." << std::endl;
+
+	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	if (renderer == nullptr) {
+		SDL_DestroyWindow(window);
+		std::cerr << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
+		SDL_Quit();
+		return 1;
+	}
+
+	SDL_Texture* texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, 800, 600);
+	if (texture == nullptr) {
+		SDL_DestroyRenderer(renderer);
+		SDL_DestroyWindow(window);
+		std::cerr << "SDL_CreateTexture Error: " << SDL_GetError() << std::endl;
+		SDL_Quit();
+		return 1;
+	}
+	int x = 0, lx = 1;
 
 	// SDL penceresi açıkken basit bir döngü
 	bool isRunning = true;
@@ -88,6 +106,23 @@ int main(int argc, char *argv[])
 				isRunning = false;
 			}
 		}
+
+		if (x < 0) x = 0;
+		if (x >= 16) x = 15;
+		if (x != lx) {
+			lx = x;
+			Uint32* pixels = newRender(x);
+			SDL_UpdateTexture(texture, NULL, pixels, 800 * sizeof(Uint32));
+			delete pixels;
+			printf("X: %d\n", x);
+		}
+
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+		SDL_RenderClear(renderer);
+		SDL_RenderCopy(renderer, texture, NULL, NULL);
+		SDL_RenderPresent(renderer);
+
+		SDL_Delay(300);
 	}
 
 	// Temizleme işlemleri

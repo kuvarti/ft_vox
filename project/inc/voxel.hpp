@@ -1,6 +1,6 @@
 #pragma once
 #include "vector2D.hpp"
-#include <unordered_map>
+#include <list>
 
 class Voxel
 {
@@ -11,6 +11,17 @@ public:
 	Voxel & operator=(const Voxel &v){ if (&v != this) 
 		{ _x = v._x; _y = v._y; _z = v._z; } return *this; };
 	~Voxel() { };
+
+	void	AddCave(int min, int max) {
+		caves.emplace_back(min, max);
+	}
+	bool	IsCave(int z) {
+		for (const auto& cave : caves) {
+			if (z >= std::get<0>(cave) && z <= std::get<1>(cave))
+				return true;
+		}
+		return false;
+	}
 
 	int		Get_x() const { return _x; }
 	int		Get_y() const { return _y; }
@@ -26,4 +37,5 @@ private:
 	int _x;
 	int _y;
 	int _z;
+	std::list<std::tuple<int, int>> caves;
 };

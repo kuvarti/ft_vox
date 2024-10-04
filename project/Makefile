@@ -1,4 +1,5 @@
 run: build
+	@mkdir -p build
 	@cmake --build build
 	@./build/bin/Ft_vox
 
@@ -8,8 +9,10 @@ build:
 install:
 	@sh ./install.sh
 
-clean:
+clear:
 	rm -rf build
 
-fclean: clean
+fclean: clear
 	rm -rf libs
+
+re: clear build run

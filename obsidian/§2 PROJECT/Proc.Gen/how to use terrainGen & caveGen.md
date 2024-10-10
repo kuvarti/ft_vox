@@ -1,3 +1,4 @@
+
 Terrain Generation chunk'in icerisinde otomatik generate ediliyor, bu sayede generation icin extra bir ugrasa gerek yok.
 
 ```cpp

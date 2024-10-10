@@ -37,3 +37,4 @@ project/build
 build
 .vscode
 *.log
+*tmp

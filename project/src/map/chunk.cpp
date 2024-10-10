@@ -33,7 +33,6 @@ Chunk::Chunk(float x, float y) : TerrainGen(Vector2D(CHUNK_SIZE, CHUNK_SIZE)),
 	_length = CHUNK_SIZE;
 
 	this->Generate(_startPoint);
-	PrintVoxelInfo();
 }
 
 Chunk::~Chunk()
@@ -130,31 +129,17 @@ int ***Chunk::_GenerateCave()
 		}
 	}
 	// Generates
-	int **map1;
-	for (size_t x = _startPoint.Get_x() - 1, i = 0; x < _startPoint.Get_x() + _length + 1; x++, i++)
-	{
-		map1 = cellular(x, _length + 2);
-		int **map2;
-		for (size_t y = _startPoint.Get_y() - 1, j = 0; y < _startPoint.Get_y() + _length + 1; y++, j++)
-		{
-			map2 = cellular(y, 1);
-			for (size_t z = 0; z < 70; z++)
-			{
-				if (map1[i][z] == map2[0][z])
-				{
-					map[i][j][z] = map1[i][z];
-				}
-				else
-				{
-					map[i][j][z] = map1[i][z];
-				}
+	const double noiseScale = 0.05;
+	for (int k = 0; k < 70; ++k) {
+		double zCoord = k * noiseScale;
+		for (int i = 0; i < 16; ++i) {
+			double xCoord = ((_startPoint.Get_x() - 1) * 16 + i) * noiseScale;
+			for (int j = 0; j < 16; ++j) {
+				double yCoord = ((_startPoint.Get_y() - 1) * 16 + j) * noiseScale;
+				map[i][j][k] = PGA::calcPerlin(xCoord, yCoord, zCoord);
 			}
-			delete[] map2[0];
-			delete[] map2;
 		}
-		mapfree(map1, _length + 2);
 	}
-	SmoothMap(map);
 
 	// Saving chunk datas
 	for (size_t x = 0; x < _length; x++) // 0
@@ -166,7 +151,7 @@ int ***Chunk::_GenerateCave()
 
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
-	std::cout << "Time taken: " << duration << " milliseconds" << std::endl;
+	std::cout << "Cavegen Time taken: " << duration << " milliseconds" << std::endl;
 	return map;
 }
 

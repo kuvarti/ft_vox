@@ -14,7 +14,7 @@ void TerrainGen::Generate(Vector2D start)
 		for (size_t y = 0; y < v.Get_y(); y++)
 		{
 			SetVoxelByLocalCoordinaate(Vector2D(x, y), Voxel(start.Get_x() + x, start.Get_y() + y,
-															 calcPerlin(start.Get_x() + x, start.Get_y() + y)));
+															 PGA::calcPerlin(start.Get_x() + x, start.Get_y() + y)));
 		}
 	}
 }

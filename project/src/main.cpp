@@ -105,6 +105,14 @@ int main(int argc, char *argv[])
 			{
 				isRunning = false;
 			}
+			if (event.type == SDL_KEYDOWN){
+				if(event.key.keysym.sym == SDLK_ESCAPE)
+					isRunning = false;
+				else if(event.key.keysym.sym == SDLK_UP)
+					x++;
+				else if(event.key.keysym.sym == SDLK_DOWN)
+					x--;
+			}
 		}
 
 		if (x < 0) x = 0;

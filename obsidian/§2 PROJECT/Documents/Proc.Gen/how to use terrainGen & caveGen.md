@@ -15,8 +15,8 @@ Ama default contructor cagirilmak zorunda ise daha sonradan ```ChangeStartPositi
 
 Chunk icerisindeki voxelleri butun olarak cagirilamaz. chunk olusturuldak sonra 
 ```cpp
-Voxel GetVoxelByLocalCoordinate(Vector2D v) const
-Voxel GetVoxelByLocalCoordinate(int x, int y) const
+Voxel GetVoxelByLocalCoordinate(Vector2D v) const;
+Voxel GetVoxelByLocalCoordinate(int x, int y) const;
 Voxel GetVoxelbyGlobalCoordinate(Vector2D) const;
 Voxel GetVoxelbyGlobalCoordinate(int, int) const;
 ```

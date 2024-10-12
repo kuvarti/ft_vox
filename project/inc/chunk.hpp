@@ -24,6 +24,8 @@ protected:
 	void Generate(Vector2D v) override
 	{
 		TerrainGen::Generate(v);
+		CaveGen::Generate(v);
+		PrintVoxelInfo();
 	}
 
 private:

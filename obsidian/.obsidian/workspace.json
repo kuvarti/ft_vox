@@ -49,20 +49,20 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "§1 FLEETING/Config Dosyasi.md",
+                "file": "§2 PROJECT/Documents/Voxel.md",
                 "mode": "source",
-                "source": true
+                "source": false
               }
             }
           },
           {
-            "id": "0e32dd808cfb82f6",
+            "id": "e60097b680bb72b3",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "§2 PROJECT/Proc.Gen/how to use terrainGen & caveGen.md",
-                "mode": "preview",
+                "file": "§2 PROJECT/Documents/Proc.Gen/how to use terrainGen & caveGen.md",
+                "mode": "source",
                 "source": false
               }
             }
@@ -80,7 +80,7 @@
             }
           }
         ],
-        "currentTab": 4
+        "currentTab": 3
       }
     ],
     "direction": "vertical"
@@ -160,7 +160,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "§2 PROJECT/Proc.Gen/how to use terrainGen & caveGen.md",
+                "file": "§2 PROJECT/Documents/Voxel.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -177,7 +177,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "§2 PROJECT/Proc.Gen/how to use terrainGen & caveGen.md",
+                "file": "§2 PROJECT/Documents/Voxel.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -200,7 +200,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "§2 PROJECT/Proc.Gen/how to use terrainGen & caveGen.md"
+                "file": "§2 PROJECT/Documents/Voxel.md"
               }
             }
           }
@@ -225,29 +225,32 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "0e32dd808cfb82f6",
+  "active": "e86afb01ed18f4ac",
   "lastOpenFiles": [
-    "Excalidraw/Chunk1.md",
-    "§2 PROJECT/Proc.Gen/how to use terrainGen & caveGen.md",
-    "Pasted Image 20240927144949_485.png",
-    "Excalidraw/Drawing 2024-09-22 00.51.51.excalidraw.md",
-    "Excalidraw/Drawing 2024-09-19 12.09.25.excalidraw.md",
-    "§2 PROJECT/Project Subject.md",
+    "§2 PROJECT/Documents/Chunks.md",
+    "§2 PROJECT/Documents/Voxel.md",
     "§2 PROJECT/HowToRun.md",
-    "§4 AREA/General ToDo List.md",
-    "§4 AREA/ChatGPT GorevPaylasimi.md",
-    "§4 AREA/CanbanNotes/Proce... Generate - Ahmet.md",
-    "Pasted Image 20240927145053_257.png",
     "§1 FLEETING/Calc terrain & Caves on threads.md",
     "§1 FLEETING/Config Dosyasi.md",
-    "§3 RESOURCES/en.subject.pdf",
-    "§2 PROJECT/Proc.Gen/Untitled",
-    "§2 PROJECT/Proc.Gen",
-    "Excalidraw",
-    "§3 RESOURCES/Proc.Gen.Algos/Simplex Noise.md",
-    "§3 RESOURCES/Proc.Gen.Algos/Perlin Noise.md",
-    "§4 AREA/CanbanNotes",
+    "§4 AREA/General ToDo List.md",
+    "Excalidraw/Chunk1.md",
     "§3 RESOURCES/Proc.Gen.Algos/Dot Product.md",
+    "§3 RESOURCES/Proc.Gen.Algos/Perlin Noise.md",
+    "§3 RESOURCES/Proc.Gen.Algos/Simplex Noise.md",
+    "§3 RESOURCES/en.subject.pdf",
+    "§2 PROJECT/Project Subject.md",
+    "§2 PROJECT/Documents",
+    "§2 PROJECT/Documents/Proc.Gen/how to use terrainGen & caveGen.md",
+    "§4 AREA/CanbanNotes/Proce... Generate - Ahmet.md",
+    "§4 AREA/ChatGPT GorevPaylasimi.md",
+    "Excalidraw/Drawing 2024-09-19 12.09.25.excalidraw.md",
+    "Pasted Image 20240927144949_485.png",
+    "Pasted Image 20240927145053_257.png",
+    "Excalidraw/Drawing 2024-09-22 00.51.51.excalidraw.md",
+    "§2 PROJECT/Proc.Gen/Untitled",
+    "§2 PROJECT/Documents/Proc.Gen",
+    "Excalidraw",
+    "§4 AREA/CanbanNotes",
     "Dot_Product.md",
     "§3 RESOURCES/Proc.Gen.Algos/Fractal Noise.md",
     "§3 RESOURCES/Proc.Gen.Algos",

@@ -7,7 +7,6 @@ kanban-plugin: board
 ## ToDo
 
 - [ ] Flat World - Fatih
-- [ ] [[Proce... Generate - Ahmet]]
 
 
 ## On Working
@@ -20,6 +19,7 @@ kanban-plugin: board
 
 ## Done
 
+- [x] [[Proce... Generate - Ahmet]]
 
 
 

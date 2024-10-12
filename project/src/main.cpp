@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 	SDL_Window *window = SDL_CreateWindow("SDL2 ve Vulkan Test 1",
 										  SDL_WINDOWPOS_CENTERED,
 										  SDL_WINDOWPOS_CENTERED,
-										  800, 600,
+										  800, 800,
 										  SDL_WINDOW_VULKAN | SDL_WINDOW_SHOWN);
 	if (!window)
 	{

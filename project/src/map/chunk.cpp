@@ -2,6 +2,7 @@
 #include "ProceduralGenerationAlgorithms.hpp"
 #include "iostream"
 #include <chrono>
+#include <tuple>
 
 Chunk::Chunk() : TerrainGen(Vector2D(CHUNK_SIZE, CHUNK_SIZE)),
 				 CaveGen(Vector2D(CHUNK_SIZE, CHUNK_SIZE)),
@@ -48,9 +49,9 @@ void Chunk::ChangeStartPosition(Vector2D v)
 Voxel Chunk::GetVoxelbyGlobalCoordinate(Vector2D v) const
 {
 	if (v.Get_x() > _startPoint.Get_x() + _length || v.Get_x() < _startPoint.Get_x())
-		return Voxel(0,0,0);
-	else if(v.Get_y() > _startPoint.Get_y() + _length || v.Get_y() < _startPoint.Get_y())
-		return Voxel(0,0,0);
+		return Voxel(0, 0, 0);
+	else if (v.Get_y() > _startPoint.Get_y() + _length || v.Get_y() < _startPoint.Get_y())
+		return Voxel(0, 0, 0);
 	return GetVoxelByLocalCoordinate(Vector2D(((int)_startPoint.Get_x() % _length) + v.Get_x(),
 											  ((int)_startPoint.Get_y() % _length) + v.Get_y()));
 }
@@ -58,9 +59,9 @@ Voxel Chunk::GetVoxelbyGlobalCoordinate(Vector2D v) const
 Voxel Chunk::GetVoxelbyGlobalCoordinate(int x, int y) const
 {
 	if (x > _startPoint.Get_x() + _length || x < _startPoint.Get_x())
-		return Voxel(0,0,0);
-	else if(y > _startPoint.Get_y() + _length || y < _startPoint.Get_y())
-		return Voxel(0,0,0);
+		return Voxel(0, 0, 0);
+	else if (y > _startPoint.Get_y() + _length || y < _startPoint.Get_y())
+		return Voxel(0, 0, 0);
 	return GetVoxelByLocalCoordinate(Vector2D(((int)_startPoint.Get_x() % _length) + x,
 											  ((int)_startPoint.Get_y() % _length) + y));
 }
@@ -74,47 +75,8 @@ void mapfree(int **m, size_t size)
 	delete[] m;
 }
 
-int GetSurroundingWallCount(int gridX, int gridY, int gridZ, int ***map)
-{
-	int wallCount = 0;
-
-	// X, Y ve Z çevresindeki hücreleri kontrol et
-	for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX++)
-	{
-		for (int neighbourY = gridY - 1; neighbourY <= gridY + 1; neighbourY++)
-		{
-			for (int neighbourZ = gridZ - 1; neighbourZ <= gridZ + 1; neighbourZ++)
-			{
-				if (neighbourZ < 0 || neighbourZ > 70)
-					wallCount++;
-				else if (neighbourX != gridX || neighbourY != gridY || neighbourZ != gridZ)
-					wallCount += map[neighbourX][neighbourY][neighbourZ];
-			}
-		}
-	}
-	return wallCount;
-}
-
-void SmoothMap(int ***map)
-{
-	for (size_t x = 1; x <= 16; x++)
-	{
-		for (size_t y = 1; y <= 16; y++)
-		{
-			for (size_t z = 0; z < 70; z++)
-			{
-				int neighbourWallTiles = GetSurroundingWallCount(x, y, z, map);
-				if (neighbourWallTiles > 6)
-					map[x][y][z] = 1;
-				else if (neighbourWallTiles < 6)
-					map[x][y][z] = 0;
-			}
-		}
-	}
-}
-
 int ***Chunk::_GenerateCave()
-{ // todo void
+{
 
 	auto startTime = std::chrono::high_resolution_clock::now();
 	int ***map;
@@ -125,30 +87,23 @@ int ***Chunk::_GenerateCave()
 	{
 		for (size_t j = 0; j < 18; j++)
 		{
-			map[i][j] = new int[70];
+			map[i][j] = new int[145];
 		}
 	}
-	// Generates
 	const double noiseScale = 0.05;
-	for (int k = 0; k < 70; ++k) {
+	for (int k = 0; k < 145; ++k)
+	{
 		double zCoord = k * noiseScale;
-		for (int i = 0; i < 16; ++i) {
+		for (int i = 0; i < 16; ++i)
+		{
 			double xCoord = ((_startPoint.Get_x() - 1) * 16 + i) * noiseScale;
-			for (int j = 0; j < 16; ++j) {
+			for (int j = 0; j < 16; ++j)
+			{
 				double yCoord = ((_startPoint.Get_y() - 1) * 16 + j) * noiseScale;
 				map[i][j][k] = PGA::calcPerlin(xCoord, yCoord, zCoord);
 			}
 		}
 	}
-
-	// Saving chunk datas
-	for (size_t x = 0; x < _length; x++) // 0
-	{
-		for (size_t y = 0; y < _length; y++) // 0
-		{
-		}
-	}
-
 	auto endTime = std::chrono::high_resolution_clock::now();
 	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
 	std::cout << "Cavegen Time taken: " << duration << " milliseconds" << std::endl;
@@ -164,8 +119,19 @@ void Chunk::PrintVoxelInfo()
 		for (size_t y = 0; y < _length; y++)
 		{
 			_voxel = GetVoxelByLocalCoordinate(x, y);
-			printf("\tVoxel Local Pos: X:%ld, Y:%ld - Voxel Global Pos: (%d)-(%d)-(%d)\n",
-				   x, y, _voxel.Get_x(), _voxel.Get_y(), _voxel.Get_z());
+			printf("\tVoxel Local Pos: X:%ld, Y:%ld - Voxel Global Pos: (%d)-(%d)-(%d)\n\tCaves: ",
+					x, y, _voxel.Get_x(), _voxel.Get_y(), _voxel.Get_z());
+
+			std::list<std::tuple<int, int>> _caves = _voxel.getCaves();
+			// Loop through each element in _caves
+			for (const auto &cave : _caves)
+			{
+				int first, second;
+				std::tie(first, second) = cave;
+				// Printing the values
+				printf("(%d-%d) ", first, second);
+			}
+			printf("\n");
 		}
 	}
 }

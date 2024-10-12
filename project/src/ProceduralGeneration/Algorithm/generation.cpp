@@ -89,7 +89,7 @@ int PGA::calcPerlin(float x, float y, float z)
 	float noiseValue = 0.0;
 	float amp = 1.0;
 	float frequency = 1.0;
-	for (int i = 0; i < 7; i++) {
+	for (int i = 0; i < 9; i++) {
 		noiseValue += perlinNoise3d(x * frequency / GRID_SIZE, y * frequency / GRID_SIZE, z * frequency / GRID_SIZE) * amp;
 		frequency *= 2; // lacunarity controls frequency growth
 		amp *= 2; // persistence controls amp decay

@@ -39,9 +39,9 @@ void deneme()
 
 void fill4x4(Uint32 *a, int x, int y, int color)
 {
-	for (size_t i = x; i < x + 8; i++)
+	for (size_t i = x; i < x + 4; i++)
 	{
-		for (size_t j = y; j < y + 8; j++)
+		for (size_t j = y; j < y + 4; j++)
 		{
 			a[i * 800 + j] = (color << 24) | (color << 16) | (color << 8) | color;
 		}
@@ -65,13 +65,13 @@ Uint32 *newRender(int x)
 		pixels[i] = 0;
 	}
 	
-	Chunk a(304, 304), b(230, 320);
+	Chunk a(304, 304), b(320, 320);
 	int ***map = a._GenerateCave();
 	int ***map1 = b._GenerateCave();
 	x++;
-	for (size_t y = 1, px = 10; y <= 32; y++, px += 8)
+	for (size_t y = 1, px = 10; y <= 32; y++, px += 4)
 	{
-		for (size_t z = 0, py = 10; z < 70; z++, py += 8)
+		for (size_t z = 0, py = 10; z < 145; z++, py += 4)
 		{
 			if (y < 16)
 				fill4x4(pixels, py, px, map1[x][y][z] == 1 ? 255 : 0);

@@ -1,5 +1,6 @@
 #include "worldGen.hpp"
 #include "ProceduralGenerationAlgorithms.hpp"
+#include <cstddef>
 /* ====== TerrainGeneration ====== */
 
 TerrainGen::TerrainGen(Vector2D s) : WorldGen(s.Get_x(), s.Get_y())

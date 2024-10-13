@@ -8,7 +8,7 @@ class Controller {
 public:
     Controller() 
         : rotation(0.0f), position(0.0f), lastMousePosition(0.0f), 
-          movementSpeed(0.01f), rotationSpeed(0.1f) {}
+          movementSpeed(0.5f), rotationSpeed(1.0f) {}
 
     void processInput();
     void handleMouseMotion(int xrel, int yrel);

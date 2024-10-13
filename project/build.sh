@@ -1,7 +1,6 @@
 mkdir -p build
 cd build
-cd ..
-cmake .
+cmake ..
 make
 
 #TODO build dosyasi olusturma/silme gibi islemler icin makefile olustur

@@ -38,6 +38,7 @@ public:
 
 protected:
 	virtual void Generate(Vector2D) = 0;
+	virtual void SetFaces() = 0;
 	void SetVoxelByLocalCoordinaate(Vector2D v, Voxel voxel)
 	{
 		_map[(int)v.Get_x()][(int)v.Get_y()] = voxel;
@@ -60,6 +61,7 @@ public:
 
 protected:
 	void Generate(Vector2D) override;
+	void SetFaces() override;
 };
 
 class CaveGen : virtual public WorldGen
@@ -70,6 +72,7 @@ public:
 
 protected:
 	void Generate(Vector2D) override;
+	void SetFaces() override;
 
 private:
 	void SeperateCaves(int *, Vector2D);

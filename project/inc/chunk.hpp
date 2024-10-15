@@ -24,9 +24,10 @@ protected:
 	void Generate(Vector2D v) override
 	{
 		TerrainGen::Generate(v);
-		CaveGen::Generate(v);
+		// CaveGen::Generate(v);
 		PrintVoxelInfo();
 	}
+	void SetFaces() override {}
 
 private:
 	Vector2D _startPoint;

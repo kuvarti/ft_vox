@@ -119,18 +119,20 @@ void Chunk::PrintVoxelInfo()
 		for (size_t y = 0; y < _length; y++)
 		{
 			_voxel = GetVoxelByLocalCoordinate(x, y);
-			printf("\tVoxel Local Pos: X:%ld, Y:%ld - Voxel Global Pos: (%d)-(%d)-(%d)\n\tCaves: ",
+			printf("\tVoxel Local Pos: X:%ld, Y:%ld - Voxel Global Pos: (%d)-(%d)-(%d)\n",
 					x, y, _voxel.Get_x(), _voxel.Get_y(), _voxel.Get_z());
+			printf("\t\tFaces UP:%d - DOWN:%d - North:%d - South:%d - West:%d - East:%d\n\tCaves: ",
+					_voxel.IsUp(), _voxel.IsDown(), _voxel.IsNorth(), _voxel.IsSouth(), _voxel.IsWest(), _voxel.IsEast());
 
-			std::list<std::tuple<int, int>> _caves = _voxel.getCaves();
+			_CAVE_LIST _caves = _voxel.getCaves();
 			// Loop through each element in _caves
-			for (const auto &cave : _caves)
-			{
-				int first, second;
-				std::tie(first, second) = cave;
-				// Printing the values
-				printf("(%d-%d) ", first, second);
-			}
+			// for (const auto &cave : _caves)
+			// {
+			// 	int first, second;
+			// 	std::tie(first, second) = cave;
+			// 	// Printing the values
+			// 	printf("(%d-%d) ", first, second);
+			// }
 			printf("\n");
 		}
 	}

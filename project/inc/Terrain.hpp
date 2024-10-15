@@ -55,6 +55,6 @@ private:
     std::vector<Vertex> vertices;
     std::vector<uint16_t> indices;
     std::map<std::pair<int, int>, Chunk> chunks;
-    int renderDistance = 4;
+    int renderDistance = 2;
     std::vector<std::vector<Chunk>> chunkArray;
 };

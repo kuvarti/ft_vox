@@ -12,33 +12,25 @@ const std::vector<uint16_t>& Terrain::getIndices() const {
     return indices;
 }
 
+
 void Terrain::addCube(float x, float y, float z) {
-    // Define the 8 vertices of the cube
-    std::array<glm::vec3, 8> cubeVertices = {
-        glm::vec3(x, y, z), glm::vec3(x + 1.0f, y, z), glm::vec3(x + 1.0f, y + 1.0f, z), glm::vec3(x, y + 1.0f, z), // Front face
-        glm::vec3(x, y, z + 1.0f), glm::vec3(x + 1.0f, y, z + 1.0f), glm::vec3(x + 1.0f, y + 1.0f, z + 1.0f), glm::vec3(x, y + 1.0f, z + 1.0f) // Back face
-    };
-
-    // Add vertices to the vertices vector
-    for (const auto& pos : cubeVertices) {
-        vertices.push_back({pos});
-    }
-
-    // Define the indices for the cube
-    std::array<uint16_t, 36> cubeIndices = {
-        0, 1, 2, 2, 3, 0, // Front face
-        1, 5, 6, 6, 2, 1, // Right face
-        5, 4, 7, 7, 6, 5, // Back face
-        4, 0, 3, 3, 7, 4, // Left face
-        4, 5, 1, 1, 0, 4, // Bottom face
-        3, 2, 6, 6, 7, 3  // Top face
+    // Define the vertices of the cube
+    std::vector<Vertex> cubeVertices = {
+        {x, y, z}, {x + 1, y, z}, {x + 1, y + 1, z}, {x, y + 1, z}, // Front face
+        {x, y, z + 1}, {x + 1, y, z + 1}, {x + 1, y + 1, z + 1}, {x, y + 1, z + 1} // Back face
     };
 
     // Offset the indices by the current number of vertices
-    uint16_t offset = static_cast<uint16_t>(vertices.size() - 8);
-    for (const auto& index : cubeIndices) {
-        indices.push_back(index + offset);
-    }
+    uint16_t offset = static_cast<uint16_t>(vertices.size());
+
+    // Define the indices for the cube
+    std::vector<uint16_t> cubeIndices = {
+        offset + 0, offset + 1, offset + 2, offset + 2, offset + 3, offset + 0,
+    };
+
+    // Add the cube's vertices and indices to the terrain's vertices and indices
+    vertices.insert(vertices.end(), cubeVertices.begin(), cubeVertices.end());
+    indices.insert(indices.end(), cubeIndices.begin(), cubeIndices.end());
 }
 
 void Terrain::addChunk(const Chunk& chunk, int chunkX, int chunkY) {
@@ -48,7 +40,7 @@ void Terrain::addChunk(const Chunk& chunk, int chunkX, int chunkY) {
     for (int x = 0; x < CHUNK_SIZE; ++x) {
         for (int y = 0; y < CHUNK_SIZE; ++y) {
             Voxel voxel = chunk.GetVoxelByLocalCoordinate(x, y);
-            addCube(voxel.Get_x(), voxel.Get_z(), voxel.Get_y());
+            addCube(voxel.Get_x(), voxel.Get_y(), voxel.Get_z());
         }
     }
 }

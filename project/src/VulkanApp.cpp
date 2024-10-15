@@ -139,7 +139,7 @@ void VulkanApp::updateUniformBuffer()
 	ubo.view = view;
 
 	// Projection matrix
-	ubo.projection = glm::perspective(glm::radians(90.0f), swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 100.0f);
+	ubo.projection = glm::perspective(glm::radians(90.0f), swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 1000.0f);
 	ubo.projection[1][1] *= -1;
 
 	void *data;
@@ -622,11 +622,11 @@ void VulkanApp::createGraphicsPipeline()
 {
 	auto vertShaderCode = readFile("shaders/vert.spv");
 	auto fragFillShaderCode = readFile("shaders/frag_fill.spv");
-	auto fragWireframeShaderCode = readFile("shaders/frag_wireframe.spv");
+	//auto fragWireframeShaderCode = readFile("shaders/frag_wireframe.spv");
 
 	VkShaderModule vertShaderModule = createShaderModule(vertShaderCode);
 	VkShaderModule fragFillShaderModule = createShaderModule(fragFillShaderCode);
-	VkShaderModule fragWireframeShaderModule = createShaderModule(fragWireframeShaderCode);
+	//VkShaderModule fragWireframeShaderModule = createShaderModule(fragWireframeShaderCode);
 
 	VkPipelineShaderStageCreateInfo vertShaderStageInfo = {};
 	vertShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
@@ -640,14 +640,14 @@ void VulkanApp::createGraphicsPipeline()
 	fragFillShaderStageInfo.module = fragFillShaderModule;
 	fragFillShaderStageInfo.pName = "main";
 
-	VkPipelineShaderStageCreateInfo fragWireframeShaderStageInfo = {};
-	fragWireframeShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
-	fragWireframeShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
-	fragWireframeShaderStageInfo.module = fragWireframeShaderModule;
-	fragWireframeShaderStageInfo.pName = "main";
+	// VkPipelineShaderStageCreateInfo fragWireframeShaderStageInfo = {};
+	// fragWireframeShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+	// fragWireframeShaderStageInfo.stage = VK_SHADER_STAGE_FRAGMENT_BIT;
+	// fragWireframeShaderStageInfo.module = fragWireframeShaderModule;
+	// fragWireframeShaderStageInfo.pName = "main";
 
 	VkPipelineShaderStageCreateInfo fillShaderStages[] = {vertShaderStageInfo, fragFillShaderStageInfo};
-	VkPipelineShaderStageCreateInfo wireframeShaderStages[] = {vertShaderStageInfo, fragWireframeShaderStageInfo};
+	//VkPipelineShaderStageCreateInfo wireframeShaderStages[] = {vertShaderStageInfo, fragWireframeShaderStageInfo};
 
 	VkVertexInputBindingDescription bindingDescription = {};
 	bindingDescription.binding = 0;
@@ -755,18 +755,18 @@ void VulkanApp::createGraphicsPipeline()
 	}
 
 	// Create wireframe pipeline
-	pipelineInfo.stageCount = 2;
-	pipelineInfo.pStages = wireframeShaderStages;
-	pipelineInfo.pColorBlendState = &colorBlending;
-	rasterizer.polygonMode = VK_POLYGON_MODE_LINE;
-	if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &wireframePipeline) != VK_SUCCESS)
-	{
-		throw std::runtime_error("Failed to create wireframe graphics pipeline");
-	}
+	// pipelineInfo.stageCount = 2;
+	// pipelineInfo.pStages = wireframeShaderStages;
+	// pipelineInfo.pColorBlendState = &colorBlending;
+	// rasterizer.polygonMode = VK_POLYGON_MODE_LINE;
+	// if (vkCreateGraphicsPipelines(device, VK_NULL_HANDLE, 1, &pipelineInfo, nullptr, &wireframePipeline) != VK_SUCCESS)
+	// {
+	// 	throw std::runtime_error("Failed to create wireframe graphics pipeline");
+	// }
 
 	vkDestroyShaderModule(device, vertShaderModule, nullptr);
 	vkDestroyShaderModule(device, fragFillShaderModule, nullptr);
-	vkDestroyShaderModule(device, fragWireframeShaderModule, nullptr);
+	//vkDestroyShaderModule(device, fragWireframeShaderModule, nullptr);
 }
 
 VkShaderModule VulkanApp::createShaderModule(const std::vector<char> &code)
@@ -859,8 +859,8 @@ void VulkanApp::createCommandBuffers()
 		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(terrain.getIndices().size()), 1, 0, 0, 0);
 
 		// Bind wireframe pipeline and draw wireframe cubes
-		vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, wireframePipeline);
-		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(terrain.getIndices().size()), 1, 0, 0, 0);
+		//vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, wireframePipeline);
+		//vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(terrain.getIndices().size()), 1, 0, 0, 0);
 
 		vkCmdEndRenderPass(commandBuffers[i]);
 

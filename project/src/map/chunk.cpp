@@ -49,26 +49,26 @@ void Chunk::ChangeStartPosition(Vector2D v)
 Voxel Chunk::GetVoxelbyGlobalCoordinate(Vector2D v) const
 {
 	if (v.Get_x() > _startPoint.Get_x() + _length || v.Get_x() < _startPoint.Get_x())
-		return Voxel(0,0,0);
-	else if(v.Get_y() > _startPoint.Get_y() + _length || v.Get_y() < _startPoint.Get_y())
-		return Voxel(0,0,0);
-	return GetVoxelByLocalCoordinate(Vector2D(((int)_startPoint.Get_x() % _length) + v.Get_x(),
-											  ((int)_startPoint.Get_y() % _length) + v.Get_y()));
+		return Voxel(0, 0, 0);
+	else if (v.Get_y() > _startPoint.Get_y() + _length || v.Get_y() < _startPoint.Get_y())
+		return Voxel(0, 0, 0);
+	else
+		return GetVoxelByLocalCoordinate(v.Get_x() - _startPoint.Get_x(), v.Get_y() - _startPoint.Get_y());
 }
 
 Voxel Chunk::GetVoxelbyGlobalCoordinate(int x, int y) const
 {
 	if (x > _startPoint.Get_x() + _length || x < _startPoint.Get_x())
-		return Voxel(0,0,0);
-	else if(y > _startPoint.Get_y() + _length || y < _startPoint.Get_y())
-		return Voxel(0,0,0);
-	return GetVoxelByLocalCoordinate(Vector2D(((int)_startPoint.Get_x() % _length) + x,
-											  ((int)_startPoint.Get_y() % _length) + y));
+		return Voxel(0, 0, 0);
+	else if (y > _startPoint.Get_y() + _length || y < _startPoint.Get_y())
+		return Voxel(0, 0, 0);
+	else
+		return GetVoxelByLocalCoordinate(x - _startPoint.Get_x(), y - _startPoint.Get_y());
 }
 
 void mapfree(int **m, size_t size)
 {
-	for (size_t i = 0; i < size; i++)
+	for (size_t i = 0; i < size; ++i)
 	{
 		delete[] m[i];
 	}
@@ -78,18 +78,23 @@ void mapfree(int **m, size_t size)
 int GetSurroundingWallCount(int gridX, int gridY, int gridZ, int ***map)
 {
 	int wallCount = 0;
-
-	// X, Y ve Z çevresindeki hücreleri kontrol et
-	for (int neighbourX = gridX - 1; neighbourX <= gridX + 1; neighbourX++)
+	for (int neighborX = gridX - 1; neighborX <= gridX + 1; ++neighborX)
 	{
-		for (int neighbourY = gridY - 1; neighbourY <= gridY + 1; neighbourY++)
+		for (int neighborY = gridY - 1; neighborY <= gridY + 1; ++neighborY)
 		{
-			for (int neighbourZ = gridZ - 1; neighbourZ <= gridZ + 1; neighbourZ++)
+			for (int neighborZ = gridZ - 1; neighborZ <= gridZ + 1; ++neighborZ)
 			{
-				if (neighbourZ < 0 || neighbourZ > 70)
+				if (neighborX >= 0 && neighborX < GRID_SIZE && neighborY >= 0 && neighborY < GRID_SIZE && neighborZ >= 0 && neighborZ < GRID_SIZE)
+				{
+					if (neighborX != gridX || neighborY != gridY || neighborZ != gridZ)
+					{
+						wallCount += map[neighborX][neighborY][neighborZ];
+					}
+				}
+				else
+				{
 					wallCount++;
-				else if (neighbourX != gridX || neighbourY != gridY || neighbourZ != gridZ)
-					wallCount += map[neighbourX][neighbourY][neighbourZ];
+				}
 			}
 		}
 	}
@@ -98,16 +103,16 @@ int GetSurroundingWallCount(int gridX, int gridY, int gridZ, int ***map)
 
 void SmoothMap(int ***map)
 {
-	for (size_t x = 1; x <= 16; x++)
+	for (int x = 0; x < GRID_SIZE; ++x)
 	{
-		for (size_t y = 1; y <= 16; y++)
+		for (int y = 0; y < GRID_SIZE; ++y)
 		{
-			for (size_t z = 0; z < 70; z++)
+			for (int z = 0; z < GRID_SIZE; ++z)
 			{
-				int neighbourWallTiles = GetSurroundingWallCount(x, y, z, map);
-				if (neighbourWallTiles > 6)
+				int surroundingWallCount = GetSurroundingWallCount(x, y, z, map);
+				if (surroundingWallCount > 4)
 					map[x][y][z] = 1;
-				else if (neighbourWallTiles < 6)
+				else if (surroundingWallCount < 4)
 					map[x][y][z] = 0;
 			}
 		}
@@ -115,72 +120,30 @@ void SmoothMap(int ***map)
 }
 
 int ***Chunk::_GenerateCave()
-{ // todo void
-
-	auto startTime = std::chrono::high_resolution_clock::now();
-	int ***map;
-	map = new int **[18];
-	for (size_t i = 0; i < 18; i++)
-		map[i] = new int *[18];
-	for (size_t i = 0; i < 18; i++)
+{
+	int ***map = new int **[GRID_SIZE];
+	for (int i = 0; i < GRID_SIZE; ++i)
 	{
-		for (size_t j = 0; j < 18; j++)
+		map[i] = new int *[GRID_SIZE];
+		for (int j = 0; j < GRID_SIZE; ++j)
 		{
-			map[i][j] = new int[70];
-		}
-	}
-	// Generates
-	int **map1;
-	for (size_t x = _startPoint.Get_x() - 1, i = 0; x < _startPoint.Get_x() + _length + 1; x++, i++)
-	{
-		map1 = cellular(x, _length + 2);
-		int **map2;
-		for (size_t y = _startPoint.Get_y() - 1, j = 0; y < _startPoint.Get_y() + _length + 1; y++, j++)
-		{
-			map2 = cellular(y, 1);
-			for (size_t z = 0; z < 70; z++)
+			map[i][j] = new int[GRID_SIZE];
+			for (int k = 0; k < GRID_SIZE; ++k)
 			{
-				if (map1[i][z] == map2[0][z])
-				{
-					map[i][j][z] = map1[i][z];
-				}
-				else
-				{
-					map[i][j][z] = map1[i][z];
-				}
+				map[i][j][k] = (rand() % 2);
 			}
-			delete[] map2[0];
-			delete[] map2;
 		}
-		mapfree(map1, _length + 2);
 	}
-	SmoothMap(map);
 
-	// Saving chunk datas
-	for (size_t x = 0; x < _length; x++) // 0
+	for (int i = 0; i < 5; ++i)
 	{
-		for (size_t y = 0; y < _length; y++) // 0
-		{
-		}
+		SmoothMap(map);
 	}
 
-	auto endTime = std::chrono::high_resolution_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
-	std::cout << "Time taken: " << duration << " milliseconds" << std::endl;
 	return map;
 }
 
 void Chunk::PrintVoxelInfo()
 {
-	Voxel _voxel;
-	printf("Chunk (%d)-(%d):\n", (int)_startPoint.Get_x(), (int)_startPoint.Get_y());
-	for (size_t x = 0; x < _length; x++)
-	{
-		for (size_t y = 0; y < _length; y++)
-		{
-			_voxel = GetVoxelByLocalCoordinate(x, y);
-			printf("\tVoxel Local Pos: X:%ld, Y:%ld - Voxel Global Pos: (%d)-(%d)-(%d)\n",
-				   x, y, _voxel.Get_x(), _voxel.Get_y(), _voxel.Get_z());
-		}
-	}
+	// nothing to do here
 }

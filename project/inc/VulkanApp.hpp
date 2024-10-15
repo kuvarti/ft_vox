@@ -15,7 +15,7 @@
 #include <array>
 
 #include "Controller.hpp"
-#include "CubeModel.hpp"
+#include "Terrain.hpp"
 
 const int WIDTH = 800;
 const int HEIGHT = 600;
@@ -109,7 +109,7 @@ private:
 	std::vector<VkFence> inFlightFences;
 	size_t currentFrame = 0;
 	Controller controller;
-	CubeModel cubeModel;
+	Terrain terrain;
 	const std::vector<const char *> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 	VkCommandPoolCreateInfo poolInfo = {};

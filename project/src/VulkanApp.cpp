@@ -1,6 +1,7 @@
 #include "VulkanApp.hpp"
 void VulkanApp::run()
 {
+	controller.setStartPoint(glm::vec3(0.0f, 100.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	initWindow();
 	initVulkan();
 	mainLoop();
@@ -24,7 +25,6 @@ void VulkanApp::initWindow()
 
 void VulkanApp::initVulkan()
 {
-	controller.setStartPoint(glm::vec3(0.0f, 1.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
 	createInstance();
 
 	if (!SDL_Vulkan_CreateSurface(window, instance, &surface))
@@ -41,6 +41,7 @@ void VulkanApp::initVulkan()
 	createGraphicsPipeline();
 	createFramebuffers();
 
+		terrain.updateChunks(controller.getPosition());
 	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 	poolInfo.queueFamilyIndex = 0; // Replace with actual queue family index
 
@@ -138,7 +139,7 @@ void VulkanApp::updateUniformBuffer()
 	ubo.view = view;
 
 	// Projection matrix
-	ubo.projection = glm::perspective(glm::radians(90.0f), swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 10.0f);
+	ubo.projection = glm::perspective(glm::radians(90.0f), swapChainExtent.width / (float)swapChainExtent.height, 0.1f, 100.0f);
 	ubo.projection[1][1] *= -1;
 
 	void *data;
@@ -255,7 +256,7 @@ void VulkanApp::createUniformBuffer()
 
 void VulkanApp::createIndexBuffer()
 {
-	auto indices = cubeModel.getIndices();
+	auto indices = terrain.getIndices();
 	VkBufferCreateInfo bufferInfo = {};
 	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 	bufferInfo.size = sizeof(indices[0]) * indices.size();
@@ -293,7 +294,7 @@ VkDeviceMemory vertexBufferMemory;
 
 void VulkanApp::createVertexBuffer()
 {
-	auto vertices = cubeModel.getVertices();
+	auto vertices = terrain.getVertices();
 	VkBufferCreateInfo bufferInfo = {};
 	bufferInfo.sType = VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO;
 	bufferInfo.size = sizeof(vertices[0]) * vertices.size();
@@ -616,6 +617,7 @@ std::vector<char> VulkanApp::readFile(const std::string &filename)
 	return buffer;
 }
 
+
 void VulkanApp::createGraphicsPipeline()
 {
 	auto vertShaderCode = readFile("shaders/vert.spv");
@@ -854,11 +856,11 @@ void VulkanApp::createCommandBuffers()
 		vkCmdBindVertexBuffers(commandBuffers[i], 0, 1, vertexBuffers, offsets);
 		vkCmdBindIndexBuffer(commandBuffers[i], indexBuffer, 0, VK_INDEX_TYPE_UINT16);
 		vkCmdBindDescriptorSets(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, pipelineLayout, 0, 1, &descriptorSets[i], 0, nullptr);
-		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(cubeModel.getIndices().size()), 1, 0, 0, 0);
+		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(terrain.getIndices().size()), 1, 0, 0, 0);
 
 		// Bind wireframe pipeline and draw wireframe cubes
 		vkCmdBindPipeline(commandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, wireframePipeline);
-		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(cubeModel.getIndices().size()), 1, 0, 0, 0);
+		vkCmdDrawIndexed(commandBuffers[i], static_cast<uint32_t>(terrain.getIndices().size()), 1, 0, 0, 0);
 
 		vkCmdEndRenderPass(commandBuffers[i]);
 

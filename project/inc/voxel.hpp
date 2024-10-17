@@ -1,6 +1,5 @@
 #pragma once
 #include "vector2D.hpp"
-#include <list>
 
 class Voxel
 {

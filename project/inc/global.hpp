@@ -6,6 +6,9 @@
 #include <vulkan/vulkan.h>
 #include <iostream>
 #include <vector>
+#include <stdexcept>
+#include <array>
+#include <tuple>
 
 namespace std {
 	template <>
@@ -18,5 +21,3 @@ namespace std {
 
 void deneme();
 Uint32 *newRender(int x);
-
-//8704

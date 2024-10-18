@@ -120,19 +120,21 @@ void Chunk::PrintVoxelInfo()
 		{
 			_voxel = GetVoxelByLocalCoordinate(x, y);
 			printf("\tVoxel Local Pos: X:%ld, Y:%ld - Voxel Global Pos: (%d)-(%d)-(%d)\n",
-					x, y, _voxel.Get_x(), _voxel.Get_y(), _voxel.Get_z());
-			printf("\t\tFaces UP:%d - DOWN:%d - North:%d - South:%d - West:%d - East:%d\n\tCaves: ",
-					_voxel.IsUp(), _voxel.IsDown(), _voxel.IsNorth(), _voxel.IsSouth(), _voxel.IsWest(), _voxel.IsEast());
+				   x, y, _voxel.Get_x(), _voxel.Get_y(), _voxel.Get_z());
+			printf("\t\t\tFaces UP:%d - DOWN:%d - North:%d - South:%d - West:%d - East:%d\n\t\tCaves:\n",
+				   _voxel.IsUp(), _voxel.IsDown(), _voxel.IsNorth(), _voxel.IsSouth(), _voxel.IsWest(), _voxel.IsEast());
 
-			_CAVE_LIST _caves = _voxel.getCaves();
-			// Loop through each element in _caves
-			// for (const auto &cave : _caves)
-			// {
-			// 	int first, second;
-			// 	std::tie(first, second) = cave;
-			// 	// Printing the values
-			// 	printf("(%d-%d) ", first, second);
-			// }
+			_CAVE_LIST _caves = _voxel.GetCaves();
+			for (auto cave : _caves)
+			{
+				printf("\t\t\tMin(%d) : Faces UP:%d - DOWN:%d - North:%d - South:%d - West:%d - East:%d\n",
+					   cave.min.z, cave.min.face.IsUp(), cave.min.face.IsDown(), cave.min.face.IsNorth(),
+					   cave.min.face.IsSouth(), cave.min.face.IsWest(), cave.min.face.IsEast());
+				printf("\t\t\tmax(%d) : Faces UP:%d - DOWN:%d - North:%d - South:%d - West:%d - East:%d\n",
+					   cave.max.z, cave.max.face.IsUp(), cave.max.face.IsDown(), cave.max.face.IsNorth(),
+					   cave.max.face.IsSouth(), cave.max.face.IsWest(), cave.max.face.IsEast());
+				printf("\t\t\t-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
+			}
 			printf("\n");
 		}
 	}

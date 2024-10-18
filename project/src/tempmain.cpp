@@ -48,6 +48,14 @@ void fill4x4(Uint32 *a, int x, int y, int color)
 	}
 }
 
+void fillRectWith4x4(Uint32 *a, int x, int y, int w, int h, int color) {
+	for (size_t i = x; i < x + w; i++) {
+		for (size_t j = y; j < y + h; j++) {
+			a[i * 800 + j] = (color << 24) | (color << 16) | (color << 8) | color;
+		}
+	}
+}
+
 void mapfree(int **m)
 {
 	for (size_t i = 0; i < 16; i++)
@@ -60,37 +68,48 @@ void mapfree(int **m)
 Uint32 *newRender(int x)
 {
 	Uint32 *pixels = new Uint32[800 * 800];
+	size_t px = 10;
 	for (size_t i = 0; i < 800*800; i++)
 	{
 		pixels[i] = 0;
 	}
-	
-	Chunk a(304, 304), b(320, 320);
-	int ***map = a._GenerateCave();
-	int ***map1 = b._GenerateCave();
+	Chunk a(304, 304);
+	// Chunk b(320, 320);
+	// Chunk c(336, 336), d(352, 352);
 	x++;
-	for (size_t y = 1, px = 10; y <= 32; y++, px += 4)
+	for (size_t y = 1; y <= 32; y++, px += 4)
 	{
-		for (size_t z = 0, py = 10; z < 145; z++, py += 4)
-		{
-			if (y < 16)
-				fill4x4(pixels, py, px, map1[x][y][z] == 1 ? 255 : 0);
-			else
-				fill4x4(pixels, py, px, map[x][y - 16][z] == 1 ? 255 : 0);
-			pixels[py * 800 + px] = (255 << 24) | (0 << 16) | (0 << 8) | 255;
+		if (y <= 16){
+			Voxel& v = a.GetVoxelByLocalCoordinate(x, y - 1);
+			_CAVE_LIST cave = v.GetCaves();
+			for(auto& l : cave) {
+				fillRectWith4x4(pixels, l.min.z * 4, px, (l.max.z - l.min.z) * 4, 4, 255);
+			}
+		}
+		else {
+			// Voxel& v = b.GetVoxelByLocalCoordinate(x, y - 17);
+			// _CAVE_LIST cave = v.getCaves();
+			// for(auto& l : cave) {
+			// 	fillRectWith4x4(pixels, l.min.z * 4, px, (l.max.z - l.min.z) * 4, 4, 255);
+			// }
 		}
 	}
-	for (int i = 17; i >= 0; i--)
-	{
-		for (int j = 17; j >= 0; j--)
-		{
-			delete[] map[i][j];
-			delete[] map1[i][j];
-		}
-		delete[] map[i];
-		delete[] map1[i];
-	}
-	delete[] map;
-	delete[] map1;
+	// for (size_t y = 1; y <= 32; y++, px += 4)
+	// {
+	// 	if (y <= 16){
+	// 		Voxel& v = c.GetVoxelByLocalCoordinate(x, y - 1);
+	// 		_CAVE_LIST cave = v.getCaves();
+	// 		for(auto& l : cave) {
+	// 			fillRectWith4x4(pixels, l.min.z * 4, px, (l.max.z - l.min.z) * 4, 4, 255);
+	// 		}
+	// 	}
+	// 	else {
+	// 		Voxel& v = d.GetVoxelByLocalCoordinate(x, y - 17);
+	// 		_CAVE_LIST cave = v.getCaves();
+	// 		for(auto& l : cave) {
+	// 			fillRectWith4x4(pixels, l.min.z * 4, px, (l.max.z - l.min.z) * 4, 4, 255);
+	// 		}
+	// 	}
+	// }
 	return pixels;
 }

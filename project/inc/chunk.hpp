@@ -18,16 +18,16 @@ public:
 	Voxel	GetVoxelbyGlobalCoordinate(int, int) const;
 	int ***_GenerateCave(); // todo this gonna be private
 
+	_CAVE_LIST GetCaves() { return GetCaves(); }
 	void PrintVoxelInfo();
 
 protected:
 	void Generate(Vector2D v) override
 	{
 		TerrainGen::Generate(v);
-		// CaveGen::Generate(v);
+		CaveGen::Generate(v);
 		PrintVoxelInfo();
 	}
-	void SetFaces() override {}
 
 private:
 	Vector2D _startPoint;

@@ -105,7 +105,15 @@ public:
 	{
 		_caves.emplace_back(Cave(min, max));
 	}
-	_CAVE_LIST getCaves()
+	void AddCave(CaveWall min, CaveWall max)
+	{
+		_caves.emplace_back(Cave(min, max));
+	}
+	_CAVE_LIST GetCaves()
+	{
+		return _caves;
+	}
+	_CAVE_LIST& GetAndChangeCaves()
 	{
 		return _caves;
 	}

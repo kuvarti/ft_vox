@@ -94,5 +94,5 @@ int PGA::calcPerlin(float x, float y, float z)
 		frequency *= 2; // lacunarity controls frequency growth
 		amp *= 2; // persistence controls amp decay
 	}
-	return (noiseValue < 0.2);
+	return (noiseValue < 0.15);
 }

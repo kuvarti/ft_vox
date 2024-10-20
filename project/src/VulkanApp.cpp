@@ -41,7 +41,6 @@ void VulkanApp::initVulkan()
 	createGraphicsPipeline();
 	createFramebuffers();
 
-	terrain.updateChunks(controller.getPosition());
 	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 	poolInfo.queueFamilyIndex = 0; // Replace with actual queue family index
 

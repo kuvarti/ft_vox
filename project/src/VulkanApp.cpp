@@ -41,7 +41,7 @@ void VulkanApp::initVulkan()
 	createGraphicsPipeline();
 	createFramebuffers();
 
-		terrain.updateChunks(controller.getPosition());
+	terrain.updateChunks(controller.getPosition());
 	poolInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
 	poolInfo.queueFamilyIndex = 0; // Replace with actual queue family index
 
@@ -147,6 +147,7 @@ void VulkanApp::updateUniformBuffer()
 	memcpy(data, &ubo, sizeof(ubo));
 	vkUnmapMemory(device, uniformBufferMemory);
 }
+
 void VulkanApp::createDescriptorPool()
 {
 	std::array<VkDescriptorPoolSize, 1> poolSizes = {};
@@ -220,9 +221,6 @@ void VulkanApp::createDescriptorSetLayout()
 	}
 }
 
-VkBuffer uniformBuffer;
-VkDeviceMemory uniformBufferMemory;
-
 void VulkanApp::createUniformBuffer()
 {
 	VkDeviceSize bufferSize = sizeof(UniformBufferObject);
@@ -288,9 +286,6 @@ void VulkanApp::createIndexBuffer()
 	memcpy(data, indices.data(), (size_t)bufferInfo.size);
 	vkUnmapMemory(device, indexBufferMemory);
 }
-
-VkBuffer vertexBuffer;
-VkDeviceMemory vertexBufferMemory;
 
 void VulkanApp::createVertexBuffer()
 {
@@ -363,28 +358,6 @@ void VulkanApp::cleanupSwapChain()
 	}
 
 	vkDestroySwapchainKHR(device, swapChain, nullptr);
-}
-
-void VulkanApp::recreateSwapChain()
-{
-	int width = 0, height = 0;
-	SDL_GetWindowSize(window, &width, &height);
-	while (width == 0 || height == 0)
-	{
-		SDL_GetWindowSize(window, &width, &height);
-		SDL_WaitEvent(nullptr);
-	}
-
-	vkDeviceWaitIdle(device);
-
-	cleanupSwapChain();
-
-	createSwapChain();
-	createImageViews();
-	createRenderPass();
-	createGraphicsPipeline();
-	createFramebuffers();
-	createCommandBuffers();
 }
 
 void VulkanApp::createInstance()
@@ -520,7 +493,6 @@ void VulkanApp::createSwapChain()
 	createInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
 	createInfo.presentMode = VK_PRESENT_MODE_FIFO_KHR;
 	createInfo.clipped = VK_TRUE;
-	createInfo.oldSwapchain = VK_NULL_HANDLE;
 
 	if (vkCreateSwapchainKHR(device, &createInfo, nullptr, &swapChain) != VK_SUCCESS)
 	{
@@ -572,7 +544,7 @@ void VulkanApp::createRenderPass()
 	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
 	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
 	colorAttachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-	colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+	colorAttachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_NONE;
 	colorAttachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
 	colorAttachment.finalLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
 
@@ -681,7 +653,6 @@ void VulkanApp::createGraphicsPipeline()
 	viewport.maxDepth = 1.0f;
 
 	VkRect2D scissor = {};
-	scissor.offset = {0, 0};
 	scissor.extent = swapChainExtent;
 
 	VkPipelineViewportStateCreateInfo viewportState = {};
@@ -938,44 +909,4 @@ void VulkanApp::drawFrame()
 	vkQueuePresentKHR(presentQueue, &presentInfo);
 
 	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
-}
-
-void VulkanApp::createDepthResources()
-{
-	VkFormat depthFormat = findDepthFormat();
-	// createImage(swapChainExtent.width, swapChainExtent.height, depthFormat, VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, depthImage, depthImageMemory);
-	// depthImageView = createImageView(depthImage, depthFormat, VK_IMAGE_ASPECT_DEPTH_BIT);
-}
-
-VkFormat VulkanApp::findDepthFormat()
-{
-	return findSupportedFormat(
-		{VK_FORMAT_D32_SFLOAT, VK_FORMAT_D32_SFLOAT_S8_UINT, VK_FORMAT_D24_UNORM_S8_UINT},
-		VK_IMAGE_TILING_OPTIMAL,
-		VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
-}
-
-VkFormat VulkanApp::findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features)
-{
-	for (VkFormat format : candidates)
-	{
-		VkFormatProperties props;
-		vkGetPhysicalDeviceFormatProperties(physicalDevice, format, &props);
-
-		if (tiling == VK_IMAGE_TILING_LINEAR && (props.linearTilingFeatures & features) == features)
-		{
-			return format;
-		}
-		else if (tiling == VK_IMAGE_TILING_OPTIMAL && (props.optimalTilingFeatures & features) == features)
-		{
-			return format;
-		}
-	}
-
-	throw std::runtime_error("Failed to find supported format!");
-}
-
-bool VulkanApp::hasStencilComponent(VkFormat format)
-{
-	return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }

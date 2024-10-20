@@ -52,9 +52,6 @@ private:
 	void createSyncObjects();
 	void updateUniformBuffer();
 	void drawFrame();
-	void createDepthResources();
-	VkFormat findDepthFormat();
-	VkFormat findSupportedFormat(const std::vector<VkFormat> &candidates, VkImageTiling tiling, VkFormatFeatureFlags features);
 	bool hasStencilComponent(VkFormat format);
 	bool checkValidationLayerSupport();
 	std::vector<const char *> getRequiredExtensions();
@@ -62,7 +59,6 @@ private:
 	void createBuffer(VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer &buffer, VkDeviceMemory &bufferMemory);
 	uint32_t findMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 	void cleanupSwapChain();
-	void recreateSwapChain();
 	VkShaderModule createShaderModule(const std::vector<char> &code);
 	static std::vector<char> readFile(const std::string &filename);
 

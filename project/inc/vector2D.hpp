@@ -1,5 +1,8 @@
 #pragma once
 
+#include <list>
+#include <tuple>
+
 class Vector2D
 {
 public:

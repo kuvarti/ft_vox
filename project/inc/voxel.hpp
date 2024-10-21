@@ -1,6 +1,5 @@
 #pragma once
 #include "vector2D.hpp"
-#include <list>
 
 #define _CAVE_LIST std::list<Cave>
 

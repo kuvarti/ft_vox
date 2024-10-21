@@ -52,8 +52,8 @@ Voxel Chunk::GetVoxelbyGlobalCoordinate(Vector2D v) const
 		return Voxel(0, 0, 0);
 	else if (v.Get_y() > _startPoint.Get_y() + _length || v.Get_y() < _startPoint.Get_y())
 		return Voxel(0, 0, 0);
-	return GetVoxelByLocalCoordinate(Vector2D(((int)_startPoint.Get_x() % _length) + v.Get_x(),
-											  ((int)_startPoint.Get_y() % _length) + v.Get_y()));
+	else
+		return GetVoxelByLocalCoordinate(v.Get_x() - _startPoint.Get_x(), v.Get_y() - _startPoint.Get_y());
 }
 
 Voxel Chunk::GetVoxelbyGlobalCoordinate(int x, int y) const
@@ -62,13 +62,13 @@ Voxel Chunk::GetVoxelbyGlobalCoordinate(int x, int y) const
 		return Voxel(0, 0, 0);
 	else if (y > _startPoint.Get_y() + _length || y < _startPoint.Get_y())
 		return Voxel(0, 0, 0);
-	return GetVoxelByLocalCoordinate(Vector2D(((int)_startPoint.Get_x() % _length) + x,
-											  ((int)_startPoint.Get_y() % _length) + y));
+	else
+		return GetVoxelByLocalCoordinate(x - _startPoint.Get_x(), y - _startPoint.Get_y());
 }
 
 void mapfree(int **m, size_t size)
 {
-	for (size_t i = 0; i < size; i++)
+	for (size_t i = 0; i < size; ++i)
 	{
 		delete[] m[i];
 	}
@@ -85,7 +85,8 @@ int ***Chunk::_GenerateCave()
 		map[i] = new int *[18];
 	for (size_t i = 0; i < 18; i++)
 	{
-		for (size_t j = 0; j < 18; j++)
+		map[i] = new int *[GRID_SIZE];
+		for (int j = 0; j < GRID_SIZE; ++j)
 		{
 			map[i][j] = new int[145];
 		}

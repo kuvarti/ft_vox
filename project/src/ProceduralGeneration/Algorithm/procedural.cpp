@@ -40,7 +40,6 @@ Vector3D PGA::randomGradient(int ix, int iy, int iz)
 	return v;
 }
 
-
 float PGA::dotGridGradient(int ix, int iy, float x, float y)
 {
 	Vector2D gradient = randomGradient(ix, iy);
@@ -58,7 +57,6 @@ float PGA::dotGridGradient(int ix, int iy, int iz, float x, float y, float z)
 
 	return (dx * gradient.Get_x() + dy * gradient.Get_y() + dz * gradient.Get_y());
 }
-
 
 float PGA::interpolate2d(float a0, float a1, float w)
 {

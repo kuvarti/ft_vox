@@ -96,65 +96,62 @@ void CaveGen::Generate(Vector2D start)
 				caves = SeperateCaves(column, v.Get_z());
 			}
 
-			if (x == 0)
-			{
-				xCoord = ((start.Get_x() - 1) * 16 + x - 1) * noiseScale;
-				columnNext = GetColumns(xCoord, yCoord, noiseScale);
-				SetFaces(caves, columnNext, VOXEL_FACE_WEST);
-				delete[] columnNext;
-			}
-
-			if (x == l.Get_x() - 1)
-			{
-				xCoord = ((start.Get_x() - 1) * 16 + x + l.Get_x()) * noiseScale;
-				columnNext = GetColumns(xCoord, yCoord, noiseScale);
-				SetFaces(caves, columnNext, VOXEL_FACE_EAST);
-				delete[] columnNext;
-			}
-			else
-			{
-				Voxel &Vnext = GetVoxelByLocalCoordinate(x + 1, y);
-				xCoord = ((start.Get_x() - 1) * l.Get_x() + x + 1) * noiseScale;
-				columnNext = GetColumns(xCoord, yCoord, noiseScale);
-				nextcaves = SeperateCaves(columnNext, Vnext.Get_z());
-				SetFaces(caves, nextcaves, VOXEL_FACE_EAST, VOXEL_FACE_WEST);
-				for (auto &l : nextcaves)
-				{
-					Vnext.AddCave(l.min, l.max);
-				}
-				delete[] columnNext;
-				nextcaves.clear();
-			}
-
-			if (y == 0)
-			{
-				yCoord = ((start.Get_y() - 1) * l.Get_y() + y - 1) * noiseScale;
-				columnNext = GetColumns(xCoord, yCoord, noiseScale);
-				SetFaces(caves, columnNext, VOXEL_FACE_NORTH);
-				delete[] columnNext;
-			}
-
-			if (y == l.Get_y() - 1)
-			{
-				yCoord = ((start.Get_y() - 1) * l.Get_y() + y + l.Get_y()) * noiseScale;
-				columnNext = GetColumns(xCoord, yCoord, noiseScale);
-				SetFaces(caves, columnNext, VOXEL_FACE_SOUTH);
-				delete[] columnNext;
-			}
-			else
-			{
-				Voxel &Vnext = GetVoxelByLocalCoordinate(x, y + 1);
-				yCoord = ((start.Get_y() - 1) * l.Get_y() + y + 1) * noiseScale;
-				columnNext = GetColumns(xCoord, yCoord, noiseScale);
-				nextcaves = SeperateCaves(columnNext, Vnext.Get_z());
-				SetFaces(caves, nextcaves, VOXEL_FACE_SOUTH, VOXEL_FACE_NORTH);
-				for (auto &l : nextcaves)
-				{
-					Vnext.AddCave(l.min, l.max);
-				}
-				delete[] columnNext;
-				nextcaves.clear();
-			}
+			// if (x == 0)
+			// {
+			// 	xCoord = ((start.Get_x() - 1) * 16 + x - 1) * noiseScale;
+			// 	columnNext = GetColumns(xCoord, yCoord, noiseScale);
+			// 	SetFaces(caves, columnNext, VOXEL_FACE_WEST);
+			// 	delete[] columnNext;
+			// }
+			// if (x == l.Get_x() - 1)
+			// {
+			// 	xCoord = ((start.Get_x() - 1) * 16 + x + l.Get_x()) * noiseScale;
+			// 	columnNext = GetColumns(xCoord, yCoord, noiseScale);
+			// 	SetFaces(caves, columnNext, VOXEL_FACE_EAST);
+			// 	delete[] columnNext;
+			// }
+			// else
+			// {
+			// 	Voxel &Vnext = GetVoxelByLocalCoordinate(x + 1, y);
+			// 	xCoord = ((start.Get_x() - 1) * l.Get_x() + x + 1) * noiseScale;
+			// 	columnNext = GetColumns(xCoord, yCoord, noiseScale);
+			// 	nextcaves = SeperateCaves(columnNext, Vnext.Get_z());
+			// 	SetFaces(caves, nextcaves, VOXEL_FACE_EAST, VOXEL_FACE_WEST);
+			// 	for (auto &l : nextcaves)
+			// 	{
+			// 		Vnext.AddCave(l.min, l.max);
+			// 	}
+			// 	delete[] columnNext;
+			// 	nextcaves.clear();
+			// }
+			// if (y == 0)
+			// {
+			// 	yCoord = ((start.Get_y() - 1) * l.Get_y() + y - 1) * noiseScale;
+			// 	columnNext = GetColumns(xCoord, yCoord, noiseScale);
+			// 	SetFaces(caves, columnNext, VOXEL_FACE_NORTH);
+			// 	delete[] columnNext;
+			// }
+			// if (y == l.Get_y() - 1)
+			// {
+			// 	yCoord = ((start.Get_y() - 1) * l.Get_y() + y + l.Get_y()) * noiseScale;
+			// 	columnNext = GetColumns(xCoord, yCoord, noiseScale);
+			// 	SetFaces(caves, columnNext, VOXEL_FACE_SOUTH);
+			// 	delete[] columnNext;
+			// }
+			// else
+			// {
+			// 	Voxel &Vnext = GetVoxelByLocalCoordinate(x, y + 1);
+			// 	yCoord = ((start.Get_y() - 1) * l.Get_y() + y + 1) * noiseScale;
+			// 	columnNext = GetColumns(xCoord, yCoord, noiseScale);
+			// 	nextcaves = SeperateCaves(columnNext, Vnext.Get_z());
+			// 	SetFaces(caves, nextcaves, VOXEL_FACE_SOUTH, VOXEL_FACE_NORTH);
+			// 	for (auto &l : nextcaves)
+			// 	{
+			// 		Vnext.AddCave(l.min, l.max);
+			// 	}
+			// 	delete[] columnNext;
+			// 	nextcaves.clear();
+			// }
 		}
 	}
 	delete[] column;

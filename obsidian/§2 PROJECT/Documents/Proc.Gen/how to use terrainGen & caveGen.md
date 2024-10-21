@@ -27,4 +27,4 @@ fonksiyonlarindan herhangi bir tane ile belirtilen kordinatdaki voxel cagirilabi
 	x ve y chunk baslangicindan kucuk `chunk_baslangici + length` den buyuk olamaz, aksi takdirde (0,0,0) voxeli doner
 
 ## Fikir:
-/todo herhangi bir sebep icin gerekli olursa voxelleri serit olarak cagiran bir get olabilir. Serit : [[Chunk1]]
+/todo herhangi bir sebep icin gerekli olursa voxelleri serit olarak cagiran bir get olabilir. Serit : [[Chunk-Terrain-Faces]]

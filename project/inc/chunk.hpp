@@ -14,8 +14,8 @@ public:
 	~Chunk();
 
 	void ChangeStartPosition(Vector2D);
-	Voxel	GetVoxelbyGlobalCoordinate(Vector2D) const;
-	Voxel	GetVoxelbyGlobalCoordinate(int, int) const;
+	Voxel GetVoxelbyGlobalCoordinate(Vector2D) const;
+	Voxel GetVoxelbyGlobalCoordinate(int, int) const;
 	int ***_GenerateCave(); // todo this gonna be private
 
 	_CAVE_LIST GetCaves() { return GetCaves(); }

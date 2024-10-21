@@ -48,9 +48,12 @@ void fill4x4(Uint32 *a, int x, int y, int color)
 	}
 }
 
-void fillRectWith4x4(Uint32 *a, int x, int y, int w, int h, int color) {
-	for (size_t i = x; i < x + w; i++) {
-		for (size_t j = y; j < y + h; j++) {
+void fillRectWith4x4(Uint32 *a, int x, int y, int w, int h, int color)
+{
+	for (size_t i = x; i < x + w; i++)
+	{
+		for (size_t j = y; j < y + h; j++)
+		{
 			a[i * 800 + j] = (color << 24) | (color << 16) | (color << 8) | color;
 		}
 	}
@@ -69,7 +72,7 @@ Uint32 *newRender(int x)
 {
 	Uint32 *pixels = new Uint32[800 * 800];
 	size_t px = 10;
-	for (size_t i = 0; i < 800*800; i++)
+	for (size_t i = 0; i < 800 * 800; i++)
 	{
 		pixels[i] = 0;
 	}
@@ -79,14 +82,17 @@ Uint32 *newRender(int x)
 	x++;
 	for (size_t y = 1; y <= 32; y++, px += 4)
 	{
-		if (y <= 16){
-			Voxel& v = a.GetVoxelByLocalCoordinate(x, y - 1);
+		if (y <= 16)
+		{
+			Voxel &v = a.GetVoxelByLocalCoordinate(x, y - 1);
 			_CAVE_LIST cave = v.GetCaves();
-			for(auto& l : cave) {
+			for (auto &l : cave)
+			{
 				fillRectWith4x4(pixels, l.min.z * 4, px, (l.max.z - l.min.z) * 4, 4, 255);
 			}
 		}
-		else {
+		else
+		{
 			// Voxel& v = b.GetVoxelByLocalCoordinate(x, y - 17);
 			// _CAVE_LIST cave = v.getCaves();
 			// for(auto& l : cave) {

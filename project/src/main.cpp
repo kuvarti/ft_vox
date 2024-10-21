@@ -76,16 +76,18 @@ int main(int argc, char *argv[])
 	}
 	std::cout << "SDL2 ve Vulkan başarılı bir şekilde çalışıyor." << std::endl;
 
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-	if (renderer == nullptr) {
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+	if (renderer == nullptr)
+	{
 		SDL_DestroyWindow(window);
 		std::cerr << "SDL_CreateRenderer Error: " << SDL_GetError() << std::endl;
 		SDL_Quit();
 		return 1;
 	}
 
-	SDL_Texture* texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, 800, 600);
-	if (texture == nullptr) {
+	SDL_Texture *texture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STATIC, 800, 600);
+	if (texture == nullptr)
+	{
 		SDL_DestroyRenderer(renderer);
 		SDL_DestroyWindow(window);
 		std::cerr << "SDL_CreateTexture Error: " << SDL_GetError() << std::endl;
@@ -105,21 +107,25 @@ int main(int argc, char *argv[])
 			{
 				isRunning = false;
 			}
-			if (event.type == SDL_KEYDOWN){
-				if(event.key.keysym.sym == SDLK_ESCAPE)
+			if (event.type == SDL_KEYDOWN)
+			{
+				if (event.key.keysym.sym == SDLK_ESCAPE)
 					isRunning = false;
-				else if(event.key.keysym.sym == SDLK_UP)
+				else if (event.key.keysym.sym == SDLK_UP)
 					x++;
-				else if(event.key.keysym.sym == SDLK_DOWN)
+				else if (event.key.keysym.sym == SDLK_DOWN)
 					x--;
 			}
 		}
 
-		if (x < 0) x = 0;
-		if (x >= 16) x = 15;
-		if (x != lx) {
+		if (x < 0)
+			x = 0;
+		if (x >= 16)
+			x = 15;
+		if (x != lx)
+		{
 			lx = x;
-			Uint32* pixels = newRender(x);
+			Uint32 *pixels = newRender(x);
 			SDL_UpdateTexture(texture, NULL, pixels, 800 * sizeof(Uint32));
 			delete pixels;
 			printf("X: %d\n", x);

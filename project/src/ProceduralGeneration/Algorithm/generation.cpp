@@ -23,7 +23,8 @@ float PGA::perlinNoise2d(float x, float y)
 	return value;
 }
 
-float PGA::perlinNoise3d(float x, float y, float z) {
+float PGA::perlinNoise3d(float x, float y, float z)
+{
 	int x0 = (int)x;
 	int y0 = (int)y;
 	int z0 = (int)z;
@@ -59,7 +60,6 @@ float PGA::perlinNoise3d(float x, float y, float z) {
 	return value;
 }
 
-
 float mapRangeWithZero(float x, float x_min, float x_max, float y_min, float y_max)
 {
 	return ((x - x_min) / (x_max - x_min)) * (y_max - y_min) + y_min;
@@ -89,10 +89,11 @@ int PGA::calcPerlin(float x, float y, float z)
 	float noiseValue = 0.0;
 	float amp = 1.0;
 	float frequency = 1.0;
-	for (int i = 0; i < 9; i++) {
+	for (int i = 0; i < 9; i++)
+	{
 		noiseValue += perlinNoise3d(x * frequency / GRID_SIZE, y * frequency / GRID_SIZE, z * frequency / GRID_SIZE) * amp;
 		frequency *= 2; // lacunarity controls frequency growth
-		amp *= 2; // persistence controls amp decay
+		amp *= 2;		// persistence controls amp decay
 	}
 	return (noiseValue < 0.15);
 }

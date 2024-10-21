@@ -2,12 +2,24 @@
 
 #include "voxel.hpp"
 
-int calcPerlin(float, float);
-float perlin(float x, float y);
-Vector2D randomGradient(int ix, int iy);
-float dotGridGradient(int ix, int iy, float x, float y);
-float interpolate(float a0, float a1, float w);
+namespace PGA
+{
+	// Procedural
+	Vector2D randomGradient(int, int);
+	Vector3D randomGradient(int, int, int);
 
-int **cellular(int xmi, int size);
-// void cellular(int **map1, int **map2);
-unsigned randomVoxel(); // todo change the name;
+	float dotGridGradient(int, int, float, float);
+	float dotGridGradient(int, int, int, float, float, float);
+
+	float interpolate2d(float, float, float);
+	float interpolate3d(float a0, float a1, float w);
+
+	// Generation
+	int calcPerlin(float, float);
+	int calcPerlin(float, float, float);
+
+	float perlinNoise2d(float, float);
+	float perlinNoise3d(float, float, float);
+
+	unsigned randomVoxel(); // todo change the name;
+}

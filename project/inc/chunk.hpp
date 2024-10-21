@@ -14,16 +14,19 @@ public:
 	~Chunk();
 
 	void ChangeStartPosition(Vector2D);
-	Voxel	GetVoxelbyGlobalCoordinate(Vector2D) const;
-	Voxel	GetVoxelbyGlobalCoordinate(int, int) const;
+	Voxel GetVoxelbyGlobalCoordinate(Vector2D) const;
+	Voxel GetVoxelbyGlobalCoordinate(int, int) const;
 	int ***_GenerateCave(); // todo this gonna be private
 
+	_CAVE_LIST GetCaves() { return GetCaves(); }
 	void PrintVoxelInfo();
 
 protected:
 	void Generate(Vector2D v) override
 	{
 		TerrainGen::Generate(v);
+		CaveGen::Generate(v);
+		PrintVoxelInfo();
 	}
 
 private:

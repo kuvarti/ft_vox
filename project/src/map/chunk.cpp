@@ -2,6 +2,7 @@
 #include "ProceduralGenerationAlgorithms.hpp"
 #include "iostream"
 #include <chrono>
+#include <tuple>
 
 Chunk::Chunk() : TerrainGen(Vector2D(CHUNK_SIZE, CHUNK_SIZE)),
 				 CaveGen(Vector2D(CHUNK_SIZE, CHUNK_SIZE)),
@@ -33,7 +34,6 @@ Chunk::Chunk(float x, float y) : TerrainGen(Vector2D(CHUNK_SIZE, CHUNK_SIZE)),
 	_length = CHUNK_SIZE;
 
 	this->Generate(_startPoint);
-	PrintVoxelInfo();
 }
 
 Chunk::~Chunk()
@@ -75,75 +75,68 @@ void mapfree(int **m, size_t size)
 	delete[] m;
 }
 
-int GetSurroundingWallCount(int gridX, int gridY, int gridZ, int ***map)
-{
-	int wallCount = 0;
-	for (int neighborX = gridX - 1; neighborX <= gridX + 1; ++neighborX)
-	{
-		for (int neighborY = gridY - 1; neighborY <= gridY + 1; ++neighborY)
-		{
-			for (int neighborZ = gridZ - 1; neighborZ <= gridZ + 1; ++neighborZ)
-			{
-				if (neighborX >= 0 && neighborX < GRID_SIZE && neighborY >= 0 && neighborY < GRID_SIZE && neighborZ >= 0 && neighborZ < GRID_SIZE)
-				{
-					if (neighborX != gridX || neighborY != gridY || neighborZ != gridZ)
-					{
-						wallCount += map[neighborX][neighborY][neighborZ];
-					}
-				}
-				else
-				{
-					wallCount++;
-				}
-			}
-		}
-	}
-	return wallCount;
-}
-
-void SmoothMap(int ***map)
-{
-	for (int x = 0; x < GRID_SIZE; ++x)
-	{
-		for (int y = 0; y < GRID_SIZE; ++y)
-		{
-			for (int z = 0; z < GRID_SIZE; ++z)
-			{
-				int surroundingWallCount = GetSurroundingWallCount(x, y, z, map);
-				if (surroundingWallCount > 4)
-					map[x][y][z] = 1;
-				else if (surroundingWallCount < 4)
-					map[x][y][z] = 0;
-			}
-		}
-	}
-}
-
 int ***Chunk::_GenerateCave()
 {
-	int ***map = new int **[GRID_SIZE];
-	for (int i = 0; i < GRID_SIZE; ++i)
+
+	auto startTime = std::chrono::high_resolution_clock::now();
+	int ***map;
+	map = new int **[18];
+	for (size_t i = 0; i < 18; i++)
+		map[i] = new int *[18];
+	for (size_t i = 0; i < 18; i++)
 	{
 		map[i] = new int *[GRID_SIZE];
 		for (int j = 0; j < GRID_SIZE; ++j)
 		{
-			map[i][j] = new int[GRID_SIZE];
-			for (int k = 0; k < GRID_SIZE; ++k)
+			map[i][j] = new int[145];
+		}
+	}
+	const double noiseScale = 0.05;
+	for (int k = 0; k < 145; ++k)
+	{
+		double zCoord = k * noiseScale;
+		for (int i = 0; i < 16; ++i)
+		{
+			double xCoord = ((_startPoint.Get_x() - 1) * 16 + i) * noiseScale;
+			for (int j = 0; j < 16; ++j)
 			{
-				map[i][j][k] = (rand() % 2);
+				double yCoord = ((_startPoint.Get_y() - 1) * 16 + j) * noiseScale;
+				map[i][j][k] = PGA::calcPerlin(xCoord, yCoord, zCoord);
 			}
 		}
 	}
-
-	for (int i = 0; i < 5; ++i)
-	{
-		SmoothMap(map);
-	}
-
+	auto endTime = std::chrono::high_resolution_clock::now();
+	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
+	std::cout << "Cavegen Time taken: " << duration << " milliseconds" << std::endl;
 	return map;
 }
 
 void Chunk::PrintVoxelInfo()
 {
-	// nothing to do here
+	Voxel _voxel;
+	printf("Chunk (%d)-(%d):\n", (int)_startPoint.Get_x(), (int)_startPoint.Get_y());
+	for (size_t x = 0; x < _length; x++)
+	{
+		for (size_t y = 0; y < _length; y++)
+		{
+			_voxel = GetVoxelByLocalCoordinate(x, y);
+			printf("\tVoxel Local Pos: X:%ld, Y:%ld - Voxel Global Pos: (%d)-(%d)-(%d)\n",
+				   x, y, _voxel.Get_x(), _voxel.Get_y(), _voxel.Get_z());
+			printf("\t\t\tFaces UP:%d - DOWN:%d - North:%d - South:%d - West:%d - East:%d\n\t\tCaves:\n",
+				   _voxel.IsUp(), _voxel.IsDown(), _voxel.IsNorth(), _voxel.IsSouth(), _voxel.IsWest(), _voxel.IsEast());
+
+			_CAVE_LIST _caves = _voxel.GetCaves();
+			for (auto cave : _caves)
+			{
+				printf("\t\t\tMin(%d) : Faces UP:%d - DOWN:%d - North:%d - South:%d - West:%d - East:%d\n",
+					   cave.min.z, cave.min.face.IsUp(), cave.min.face.IsDown(), cave.min.face.IsNorth(),
+					   cave.min.face.IsSouth(), cave.min.face.IsWest(), cave.min.face.IsEast());
+				printf("\t\t\tmax(%d) : Faces UP:%d - DOWN:%d - North:%d - South:%d - West:%d - East:%d\n",
+					   cave.max.z, cave.max.face.IsUp(), cave.max.face.IsDown(), cave.max.face.IsNorth(),
+					   cave.max.face.IsSouth(), cave.max.face.IsWest(), cave.max.face.IsEast());
+				printf("\t\t\t-=-=-=-=-=-=-=-=-=-=-=-=-=-=-\n");
+			}
+			printf("\n");
+		}
+	}
 }

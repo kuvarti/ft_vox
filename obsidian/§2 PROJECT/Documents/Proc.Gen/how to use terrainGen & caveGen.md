@@ -1,3 +1,4 @@
+
 Terrain Generation chunk'in icerisinde otomatik generate ediliyor, bu sayede generation icin extra bir ugrasa gerek yok.
 
 ```cpp
@@ -14,8 +15,8 @@ Ama default contructor cagirilmak zorunda ise daha sonradan ```ChangeStartPositi
 
 Chunk icerisindeki voxelleri butun olarak cagirilamaz. chunk olusturuldak sonra 
 ```cpp
-Voxel GetVoxelByLocalCoordinate(Vector2D v) const
-Voxel GetVoxelByLocalCoordinate(int x, int y) const
+Voxel GetVoxelByLocalCoordinate(Vector2D v) const;
+Voxel GetVoxelByLocalCoordinate(int x, int y) const;
 Voxel GetVoxelbyGlobalCoordinate(Vector2D) const;
 Voxel GetVoxelbyGlobalCoordinate(int, int) const;
 ```
@@ -26,4 +27,4 @@ fonksiyonlarindan herhangi bir tane ile belirtilen kordinatdaki voxel cagirilabi
 	x ve y chunk baslangicindan kucuk `chunk_baslangici + length` den buyuk olamaz, aksi takdirde (0,0,0) voxeli doner
 
 ## Fikir:
-/todo herhangi bir sebep icin gerekli olursa voxelleri serit olarak cagiran bir get olabilir. Serit : [[Chunk1]]
+/todo herhangi bir sebep icin gerekli olursa voxelleri serit olarak cagiran bir get olabilir. Serit : [[Chunk-Terrain-Faces]]

@@ -4,6 +4,8 @@
 
 int main()
 {
+	srand(time(0));
+	env.seed = rand();
 	VulkanApp app;
 	try
 	{

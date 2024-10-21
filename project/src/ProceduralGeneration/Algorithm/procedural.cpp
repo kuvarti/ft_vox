@@ -1,5 +1,6 @@
 #include "ProceduralGenerationAlgorithms.hpp"
 #include "vector2D.hpp"
+#include "global.hpp"
 #include <math.h>
 
 Vector2D PGA::randomGradient(int ix, int iy)
@@ -12,6 +13,7 @@ Vector2D PGA::randomGradient(int ix, int iy)
 	b *= 1911520717;
 	a ^= b << s | b >> w - s;
 	a *= 2048419325;
+	a *= env.seed;
 	float random = a * (3.14159265 / ~(~0u >> 1));
 
 	Vector2D v;
@@ -31,6 +33,7 @@ Vector3D PGA::randomGradient(int ix, int iy, int iz)
 	c ^= b << s | b >> (w - s);
 	c *= 2048419325;
 	a ^= c << s | c >> (w - s);
+	a *= env.seed;
 	float random = a * (3.14159265 / ~(~0u >> 1));
 
 	Vector3D v;

@@ -59,16 +59,8 @@ void fillRectWith4x4(Uint32 *a, int x, int y, int w, int h, int color)
 	}
 }
 
-void mapfree(int **m)
-{
-	for (size_t i = 0; i < 16; i++)
-	{
-		delete[] m[i];
-	}
-	delete[] m;
-}
 
-Uint32 *newRender(int x)
+Uint32 *caveRender(int x)
 {
 	Uint32 *pixels = new Uint32[800 * 800];
 	size_t px = 10;
@@ -100,22 +92,5 @@ Uint32 *newRender(int x)
 			// }
 		}
 	}
-	// for (size_t y = 1; y <= 32; y++, px += 4)
-	// {
-	// 	if (y <= 16){
-	// 		Voxel& v = c.GetVoxelByLocalCoordinate(x, y - 1);
-	// 		_CAVE_LIST cave = v.getCaves();
-	// 		for(auto& l : cave) {
-	// 			fillRectWith4x4(pixels, l.min.z * 4, px, (l.max.z - l.min.z) * 4, 4, 255);
-	// 		}
-	// 	}
-	// 	else {
-	// 		Voxel& v = d.GetVoxelByLocalCoordinate(x, y - 17);
-	// 		_CAVE_LIST cave = v.getCaves();
-	// 		for(auto& l : cave) {
-	// 			fillRectWith4x4(pixels, l.min.z * 4, px, (l.max.z - l.min.z) * 4, 4, 255);
-	// 		}
-	// 	}
-	// }
 	return pixels;
 }

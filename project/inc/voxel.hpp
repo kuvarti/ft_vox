@@ -1,5 +1,8 @@
 #pragma once
-#include "vector2D.hpp"
+#include "list"
+#include "glm/fwd.hpp"
+#include "glm/vec2.hpp"
+#include "glm/vec3.hpp"
 
 #define _CAVE_LIST std::list<Cave>
 
@@ -67,32 +70,14 @@ struct Cave
 class Voxel : public Faces
 {
 public:
-	Voxel() : Faces()
-	{
-		_x = 0;
-		_y = 0;
-		_z = 0;
-	}
-	Voxel(int x, int y, int z) : Faces()
-	{
-		_x = x;
-		_y = y;
-		_z = z;
-	}
-	Voxel(const Voxel &v) : Faces(v.GetAllFaces())
-	{
-		_x = v._x;
-		_y = v._y;
-		_z = v._z;
-		_caves = v._caves;
-	}
+	Voxel() : Faces(), _pos(glm::vec3(0, 0, 0)) {}
+	Voxel(int x, int y, int z) : Faces(), _pos(glm::vec3(x, y, z)) {}
+	Voxel(const Voxel &v) : Faces(v.GetAllFaces()), _pos(v._pos), _caves(v._caves) {}
 	Voxel &operator=(const Voxel &v)
 	{
 		if (&v != this)
 		{
-			_x = v._x;
-			_y = v._y;
-			_z = v._z;
+			_pos = v._pos;
 			_caves = v._caves;
 			SetFaceWithZero(v.GetAllFaces());
 		}
@@ -121,40 +106,41 @@ public:
 		return _caves;
 	}
 
-	int Get_x() const { return _x; }
-	int Get_y() const { return _y; }
-	int Get_z() const { return _z; }
-	Vector2D Get_2dPos() const { return Vector2D(_x, _y); }
+	glm::vec3 Get_pos() const { return _pos; }
+	glm::vec2 Get_2dPos() const { return glm::vec2(_pos.x, _pos.y); }
 
+	glm::vec3 Set_pos(glm::vec3 v)
+	{
+		_pos = v;
+		return _pos;
+	}
 	int Set_x(int x)
 	{
-		_x = x;
-		return _x;
+		_pos.x = x;
+		return _pos.x;
 	}
 	int Set_y(int y)
 	{
-		_y = y;
-		return _y;
+		_pos.y = y;
+		return _pos.y;
 	}
 	int Set_z(unsigned z)
 	{
-		_z = z;
-		return _z;
+		_pos.z = z;
+		return _pos.z;
 	}
 	void Set_2dPos(int x, int y)
 	{
-		_x = x;
-		_y = y;
+		_pos.x = x;
+		_pos.y = y;
 	}
-	void Set_2dPos(Vector2D v)
+	void Set_2dPos(glm::vec2 v)
 	{
-		_x = v.Get_x();
-		_y = v.Get_y();
+		_pos.x = v.x;
+		_pos.y = v.y;
 	}
 
 private:
-	int _x;
-	int _y;
-	int _z;
+	glm::vec3 _pos;
 	_CAVE_LIST _caves;
 };

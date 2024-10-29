@@ -5,8 +5,8 @@
 namespace PGA
 {
 	// Procedural
-	Vector2D randomGradient(int, int);
-	Vector3D randomGradient(int, int, int);
+	glm::vec2 randomGradient(int, int);
+	glm::vec3 randomGradient(int, int, int);
 
 	float dotGridGradient(int, int, float, float);
 	float dotGridGradient(int, int, int, float, float, float);

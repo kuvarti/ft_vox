@@ -2,65 +2,65 @@
 #include "ProceduralGenerationAlgorithms.hpp"
 /* ====== TerrainGeneration ====== */
 
-TerrainGen::TerrainGen(Vector2D s) : WorldGen(s.Get_x(), s.Get_y())
+TerrainGen::TerrainGen(glm::vec2 s) : WorldGen(s.x, s.y)
 {
 }
 
-void TerrainGen::Generate(Vector2D start)
+void TerrainGen::Generate(glm::vec2 start)
 {
 	int z = 0;
-	Vector2D l = WorldGen::GetLength();
-	for (size_t x = 0; x < l.Get_x(); x++)
+	glm::vec2 l = WorldGen::GetLength();
+	for (size_t x = 0; x < l.x; x++)
 	{
-		for (size_t y = 0; y < l.Get_y(); y++)
+		for (size_t y = 0; y < l.y; y++)
 		{
 			Voxel &v = GetVoxelByLocalCoordinate(x, y);
-			v.Set_2dPos(start.Get_x() + x, start.Get_y() + y);
-			z = v.Get_z();
+			v.Set_2dPos(start.x + x, start.y + y);
+			z = v.Get_pos().z;
 			if (z == 0)
 			{
-				z = v.Set_z(PGA::calcPerlin(start.Get_x() + x, start.Get_y() + y));
+				z = v.Set_z(PGA::calcPerlin(start.x + x, start.y + y));
 			}
 
 			v.SetFace(VOXEL_FACE_UP);
 			if (x == 0)
 			{
-				if (PGA::calcPerlin(start.Get_x() - 1, start.Get_y() + y) < z)
-					v.SetFace(VOXEL_FACE_WEST);
+				if (PGA::calcPerlin(start.x - 1, start.y + y) < z)
+					v.SetFace(VOXEL_FACE_NORTH);
 			}
 
-			if (x == l.Get_x() - 1)
+			if (x == l.x - 1)
 			{
-				if (PGA::calcPerlin(start.Get_x() + l.Get_x(), start.Get_y() + y) < z)
-					v.SetFace(VOXEL_FACE_EAST);
+				if (PGA::calcPerlin(start.x + l.x, start.y + y) < z)
+					v.SetFace(VOXEL_FACE_SOUTH);
 			}
 			else
 			{
 				Voxel &Vnext = GetVoxelByLocalCoordinate(x + 1, y);
-				if (Vnext.Set_z(PGA::calcPerlin(start.Get_x() + x + 1, start.Get_y() + y)) < z)
-					v.SetFace(VOXEL_FACE_EAST);
-				else if (Vnext.Get_z() > z)
-					Vnext.SetFace(VOXEL_FACE_WEST);
+				if (Vnext.Set_z(PGA::calcPerlin(start.x + x + 1, start.y + y)) < z)
+					v.SetFace(VOXEL_FACE_SOUTH);
+				else if (Vnext.Get_pos().z > z)
+					Vnext.SetFace(VOXEL_FACE_NORTH);
 			}
 
 			if (y == 0)
 			{
-				if (PGA::calcPerlin(start.Get_x() + x, start.Get_y() - 1) < z)
-					v.SetFace(VOXEL_FACE_NORTH);
+				if (PGA::calcPerlin(start.x + x, start.y - 1) < z)
+					v.SetFace(VOXEL_FACE_WEST);
 			}
 
-			if (y == l.Get_y() - 1)
+			if (y == l.y - 1)
 			{
-				if (PGA::calcPerlin(start.Get_x() + x, start.Get_y() + l.Get_y()) < z)
-					v.SetFace(VOXEL_FACE_SOUTH);
+				if (PGA::calcPerlin(start.x + x, start.y + l.y) < z)
+					v.SetFace(VOXEL_FACE_EAST);
 			}
 			else
 			{
 				Voxel &Vnext = GetVoxelByLocalCoordinate(x, y + 1);
-				if (Vnext.Set_z(PGA::calcPerlin(start.Get_x() + x, start.Get_y() + y + 1)) < z)
-					v.SetFace(VOXEL_FACE_SOUTH);
-				else if (Vnext.Get_z() > z)
-					Vnext.SetFace(VOXEL_FACE_NORTH);
+				if (Vnext.Set_z(PGA::calcPerlin(start.x + x, start.y + y + 1)) < z)
+					v.SetFace(VOXEL_FACE_EAST);
+				else if (z < Vnext.Get_pos().z)
+					Vnext.SetFace(VOXEL_FACE_WEST);
 			}
 		}
 	}
@@ -71,41 +71,41 @@ void TerrainGen::Generate(Vector2D start)
 
 /* ====== CaveGeneration ====== */
 
-CaveGen::CaveGen(Vector2D s) : WorldGen(s.Get_x(), s.Get_y())
+CaveGen::CaveGen(glm::vec2 s) : WorldGen(s.x, s.y)
 {
 }
 
-void CaveGen::Generate(Vector2D start)
+void CaveGen::Generate(glm::vec2 start)
 {
-	Vector2D l = WorldGen::GetLength();
+	glm::vec2 l = WorldGen::GetLength();
 	_CAVE_LIST nextcaves;
 	int *column = new int[145], *columnNext = new int[145];
 
 	const double noiseScale = 0.05;
-	for (size_t x = 0; x < l.Get_x(); ++x)
+	for (size_t x = 0; x < l.x; ++x)
 	{
-		for (size_t y = 0; y < l.Get_y(); ++y)
+		for (size_t y = 0; y < l.y; ++y)
 		{
-			double xCoord = ((start.Get_x() - 1) * l.Get_x() + x) * noiseScale;
-			double yCoord = ((start.Get_y() - 1) * l.Get_y() + y) * noiseScale;
+			double xCoord = ((start.x - 1) * l.x + x) * noiseScale;
+			double yCoord = ((start.y - 1) * l.y + y) * noiseScale;
 			_CAVE_LIST &caves = GetVoxelByLocalCoordinate(x, y).GetAndChangeCaves();
 			if (caves.empty())
 			{
 				Voxel &v = GetVoxelByLocalCoordinate(x, y);
 				column = GetColumns(xCoord, yCoord, noiseScale);
-				caves = SeperateCaves(column, v.Get_z());
+				caves = SeperateCaves(column, v.Get_pos().z);
 			}
 
 			// if (x == 0)
 			// {
-			// 	xCoord = ((start.Get_x() - 1) * 16 + x - 1) * noiseScale;
+			// 	xCoord = ((start.x - 1) * 16 + x - 1) * noiseScale;
 			// 	columnNext = GetColumns(xCoord, yCoord, noiseScale);
 			// 	SetFaces(caves, columnNext, VOXEL_FACE_WEST);
 			// 	delete[] columnNext;
 			// }
-			// if (x == l.Get_x() - 1)
+			// if (x == l.x - 1)
 			// {
-			// 	xCoord = ((start.Get_x() - 1) * 16 + x + l.Get_x()) * noiseScale;
+			// 	xCoord = ((start.x - 1) * 16 + x + l.x) * noiseScale;
 			// 	columnNext = GetColumns(xCoord, yCoord, noiseScale);
 			// 	SetFaces(caves, columnNext, VOXEL_FACE_EAST);
 			// 	delete[] columnNext;
@@ -113,9 +113,9 @@ void CaveGen::Generate(Vector2D start)
 			// else
 			// {
 			// 	Voxel &Vnext = GetVoxelByLocalCoordinate(x + 1, y);
-			// 	xCoord = ((start.Get_x() - 1) * l.Get_x() + x + 1) * noiseScale;
+			// 	xCoord = ((start.x - 1) * l.x + x + 1) * noiseScale;
 			// 	columnNext = GetColumns(xCoord, yCoord, noiseScale);
-			// 	nextcaves = SeperateCaves(columnNext, Vnext.Get_z());
+			// 	nextcaves = SeperateCaves(columnNext, Vnext.z);
 			// 	SetFaces(caves, nextcaves, VOXEL_FACE_EAST, VOXEL_FACE_WEST);
 			// 	for (auto &l : nextcaves)
 			// 	{
@@ -126,14 +126,14 @@ void CaveGen::Generate(Vector2D start)
 			// }
 			// if (y == 0)
 			// {
-			// 	yCoord = ((start.Get_y() - 1) * l.Get_y() + y - 1) * noiseScale;
+			// 	yCoord = ((start.y - 1) * l.y + y - 1) * noiseScale;
 			// 	columnNext = GetColumns(xCoord, yCoord, noiseScale);
 			// 	SetFaces(caves, columnNext, VOXEL_FACE_NORTH);
 			// 	delete[] columnNext;
 			// }
-			// if (y == l.Get_y() - 1)
+			// if (y == l.y - 1)
 			// {
-			// 	yCoord = ((start.Get_y() - 1) * l.Get_y() + y + l.Get_y()) * noiseScale;
+			// 	yCoord = ((start.y - 1) * l.y + y + l.y) * noiseScale;
 			// 	columnNext = GetColumns(xCoord, yCoord, noiseScale);
 			// 	SetFaces(caves, columnNext, VOXEL_FACE_SOUTH);
 			// 	delete[] columnNext;
@@ -141,9 +141,9 @@ void CaveGen::Generate(Vector2D start)
 			// else
 			// {
 			// 	Voxel &Vnext = GetVoxelByLocalCoordinate(x, y + 1);
-			// 	yCoord = ((start.Get_y() - 1) * l.Get_y() + y + 1) * noiseScale;
+			// 	yCoord = ((start.y - 1) * l.y + y + 1) * noiseScale;
 			// 	columnNext = GetColumns(xCoord, yCoord, noiseScale);
-			// 	nextcaves = SeperateCaves(columnNext, Vnext.Get_z());
+			// 	nextcaves = SeperateCaves(columnNext, Vnext.z);
 			// 	SetFaces(caves, nextcaves, VOXEL_FACE_SOUTH, VOXEL_FACE_NORTH);
 			// 	for (auto &l : nextcaves)
 			// 	{

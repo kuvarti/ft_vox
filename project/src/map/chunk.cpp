@@ -4,19 +4,19 @@
 #include <chrono>
 #include <tuple>
 
-Chunk::Chunk() : TerrainGen(Vector2D(CHUNK_SIZE, CHUNK_SIZE)),
-				 CaveGen(Vector2D(CHUNK_SIZE, CHUNK_SIZE)),
+Chunk::Chunk() : TerrainGen(glm::vec2(CHUNK_SIZE, CHUNK_SIZE)),
+				 CaveGen(glm::vec2(CHUNK_SIZE, CHUNK_SIZE)),
 				 WorldGen(CHUNK_SIZE, CHUNK_SIZE)
 {
-	_startPoint.Set_x(0);
-	_startPoint.Set_y(0);
+	_startPoint.x = 0;
+	_startPoint.y = 0;
 	_length = CHUNK_SIZE;
 
 	std::cout << "Chunk::Chunk() Called" << std::endl;
 }
 
-Chunk::Chunk(Vector2D startPoint) : TerrainGen(Vector2D(CHUNK_SIZE, CHUNK_SIZE)),
-									CaveGen(Vector2D(CHUNK_SIZE, CHUNK_SIZE)),
+Chunk::Chunk(glm::vec2 startPoint) : TerrainGen(glm::vec2(CHUNK_SIZE, CHUNK_SIZE)),
+									CaveGen(glm::vec2(CHUNK_SIZE, CHUNK_SIZE)),
 									WorldGen(CHUNK_SIZE, CHUNK_SIZE)
 {
 	_startPoint = startPoint;
@@ -25,12 +25,12 @@ Chunk::Chunk(Vector2D startPoint) : TerrainGen(Vector2D(CHUNK_SIZE, CHUNK_SIZE))
 	this->Generate(_startPoint);
 }
 
-Chunk::Chunk(float x, float y) : TerrainGen(Vector2D(CHUNK_SIZE, CHUNK_SIZE)),
-								 CaveGen(Vector2D(CHUNK_SIZE, CHUNK_SIZE)),
+Chunk::Chunk(float x, float y) : TerrainGen(glm::vec2(CHUNK_SIZE, CHUNK_SIZE)),
+								 CaveGen(glm::vec2(CHUNK_SIZE, CHUNK_SIZE)),
 								 WorldGen(CHUNK_SIZE, CHUNK_SIZE)
 {
-	_startPoint.Set_x(x);
-	_startPoint.Set_y(y);
+	_startPoint.x = x;
+	_startPoint.y = y;
 	_length = CHUNK_SIZE;
 
 	this->Generate(_startPoint);
@@ -40,30 +40,30 @@ Chunk::~Chunk()
 {
 }
 
-void Chunk::ChangeStartPosition(Vector2D v)
+void Chunk::ChangeStartPosition(glm::vec2 v)
 {
 	_startPoint = v;
 	this->Generate(_startPoint);
 }
 
-Voxel Chunk::GetVoxelbyGlobalCoordinate(Vector2D v) const
+Voxel Chunk::GetVoxelbyGlobalCoordinate(glm::vec2 v) const
 {
-	if (v.Get_x() > _startPoint.Get_x() + _length || v.Get_x() < _startPoint.Get_x())
+	if (v.x > _startPoint.x + _length || v.x < _startPoint.x)
 		return Voxel(0, 0, 0);
-	else if (v.Get_y() > _startPoint.Get_y() + _length || v.Get_y() < _startPoint.Get_y())
+	else if (v.y > _startPoint.y + _length || v.y < _startPoint.y)
 		return Voxel(0, 0, 0);
 	else
-		return GetVoxelByLocalCoordinate(v.Get_x() - _startPoint.Get_x(), v.Get_y() - _startPoint.Get_y());
+		return GetVoxelByLocalCoordinate(v.x - _startPoint.x, v.y - _startPoint.y);
 }
 
 Voxel Chunk::GetVoxelbyGlobalCoordinate(int x, int y) const
 {
-	if (x > _startPoint.Get_x() + _length || x < _startPoint.Get_x())
+	if (x > _startPoint.x + _length || x < _startPoint.x)
 		return Voxel(0, 0, 0);
-	else if (y > _startPoint.Get_y() + _length || y < _startPoint.Get_y())
+	else if (y > _startPoint.y + _length || y < _startPoint.y)
 		return Voxel(0, 0, 0);
 	else
-		return GetVoxelByLocalCoordinate(x - _startPoint.Get_x(), y - _startPoint.Get_y());
+		return GetVoxelByLocalCoordinate(x - _startPoint.x, y - _startPoint.y);
 }
 
 void mapfree(int **m, size_t size)
@@ -97,10 +97,10 @@ int ***Chunk::_GenerateCave()
 		double zCoord = k * noiseScale;
 		for (int i = 0; i < 16; ++i)
 		{
-			double xCoord = ((_startPoint.Get_x() - 1) * 16 + i) * noiseScale;
+			double xCoord = ((_startPoint.x - 1) * 16 + i) * noiseScale;
 			for (int j = 0; j < 16; ++j)
 			{
-				double yCoord = ((_startPoint.Get_y() - 1) * 16 + j) * noiseScale;
+				double yCoord = ((_startPoint.y - 1) * 16 + j) * noiseScale;
 				map[i][j][k] = PGA::calcPerlin(xCoord, yCoord, zCoord);
 			}
 		}
@@ -114,14 +114,14 @@ int ***Chunk::_GenerateCave()
 void Chunk::PrintVoxelInfo()
 {
 	Voxel _voxel;
-	printf("Chunk (%d)-(%d):\n", (int)_startPoint.Get_x(), (int)_startPoint.Get_y());
+	printf("Chunk (%d)-(%d):\n", (int)_startPoint.x, (int)_startPoint.y);
 	for (size_t x = 0; x < _length; x++)
 	{
 		for (size_t y = 0; y < _length; y++)
 		{
 			_voxel = GetVoxelByLocalCoordinate(x, y);
 			printf("\tVoxel Local Pos: X:%ld, Y:%ld - Voxel Global Pos: (%d)-(%d)-(%d)\n",
-				   x, y, _voxel.Get_x(), _voxel.Get_y(), _voxel.Get_z());
+				   x, y, (int)_voxel.Get_pos().x, (int)_voxel.Get_pos().y, (int)_voxel.Get_pos().z);
 			printf("\t\t\tFaces UP:%d - DOWN:%d - North:%d - South:%d - West:%d - East:%d\n\t\tCaves:\n",
 				   _voxel.IsUp(), _voxel.IsDown(), _voxel.IsNorth(), _voxel.IsSouth(), _voxel.IsWest(), _voxel.IsEast());
 

@@ -11,23 +11,23 @@ public:
 		{
 			_map[i] = new Voxel[y];
 		}
-		_len.Set_x(x);
-		_len.Set_y(y);
+		_len.x= x;
+		_len.y= y;
 	}
 	~WorldGen()
 	{
-		for (int i = 0; i < _len.Get_x(); ++i)
+		for (int i = 0; i < _len.x; ++i)
 		{
 			delete[] _map[i];
 		}
 		delete[] _map;
 	}
 
-	Voxel &GetVoxelByLocalCoordinate(Vector2D v) const
+	Voxel &GetVoxelByLocalCoordinate(glm::vec2 v) const
 	{
 		// if (v.Get_x() > 15 || v.Get_x() < 0 || v.Get_y() > 15 || v.Get_y() < 0)
 		// 	return Voxel(0,0,0);
-		return _map[(int)v.Get_x()][(int)v.Get_y()];
+		return _map[(int)v.x][(int)v.y];
 	}
 	Voxel &GetVoxelByLocalCoordinate(size_t x, size_t y) const
 	{
@@ -37,39 +37,39 @@ public:
 	}
 
 protected:
-	virtual void Generate(Vector2D) = 0;
-	void SetVoxelByLocalCoordinaate(Vector2D v, Voxel voxel)
+	virtual void Generate(glm::vec2) = 0;
+	void SetVoxelByLocalCoordinaate(glm::vec2 v, Voxel voxel)
 	{
-		_map[(int)v.Get_x()][(int)v.Get_y()] = voxel;
+		_map[(int)v.x][(int)v.y] = voxel;
 	}
-	Vector2D GetLength() const
+	glm::vec2 GetLength() const
 	{
 		return _len;
 	}
 
 private:
 	Voxel **_map;
-	Vector2D _len;
+	glm::vec2 _len;
 };
 
 class TerrainGen : virtual public WorldGen
 {
 public:
-	TerrainGen(Vector2D);
+	TerrainGen(glm::vec2);
 	~TerrainGen() {}
 
 protected:
-	void Generate(Vector2D) override;
+	void Generate(glm::vec2) override;
 };
 
 class CaveGen : virtual public WorldGen
 {
 public:
-	CaveGen(Vector2D);
+	CaveGen(glm::vec2);
 	~CaveGen() {}
 
 protected:
-	void Generate(Vector2D) override;
+	void Generate(glm::vec2) override;
 
 private:
 	void SetFaces(_CAVE_LIST &, int *, unsigned char);

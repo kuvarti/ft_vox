@@ -9,12 +9,12 @@ class Chunk : public TerrainGen, public CaveGen
 {
 public:
 	Chunk();
-	Chunk(Vector2D);
+	Chunk(glm::vec2);
 	Chunk(float, float);
 	~Chunk();
 
-	void ChangeStartPosition(Vector2D);
-	Voxel GetVoxelbyGlobalCoordinate(Vector2D) const;
+	void ChangeStartPosition(glm::vec2);
+	Voxel GetVoxelbyGlobalCoordinate(glm::vec2) const;
 	Voxel GetVoxelbyGlobalCoordinate(int, int) const;
 	int ***_GenerateCave(); // todo this gonna be private
 
@@ -22,7 +22,7 @@ public:
 	void PrintVoxelInfo();
 
 protected:
-	void Generate(Vector2D v) override
+	void Generate(glm::vec2 v) override
 	{
 		TerrainGen::Generate(v);
 		CaveGen::Generate(v);
@@ -30,6 +30,6 @@ protected:
 	}
 
 private:
-	Vector2D _startPoint;
+	glm::vec2 _startPoint;
 	int _length;
 };

@@ -3,6 +3,21 @@
 #include <unordered_map>
 #include <chrono>
 
+Uint32 *caveRender(int x);
+void doSomething(SDL_Renderer* renderer, int x, SDL_Texture* texture) {
+	if (x < 0) x = 0;
+	if (x >= 16) x = 15;
+
+	Uint32* pixels = caveRender(x);
+	SDL_UpdateTexture(texture, NULL, pixels, 800 * sizeof(Uint32));
+	delete pixels;
+	printf("X: %d\n", x);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_RenderClear(renderer);
+	SDL_RenderCopy(renderer, texture, NULL, NULL);
+	SDL_RenderPresent(renderer);
+}
+
 void deneme()
 {
 	const int start = -8192;
@@ -59,16 +74,8 @@ void fillRectWith4x4(Uint32 *a, int x, int y, int w, int h, int color)
 	}
 }
 
-void mapfree(int **m)
-{
-	for (size_t i = 0; i < 16; i++)
-	{
-		delete[] m[i];
-	}
-	delete[] m;
-}
 
-Uint32 *newRender(int x)
+Uint32 *caveRender(int x)
 {
 	Uint32 *pixels = new Uint32[800 * 800];
 	size_t px = 10;
@@ -100,22 +107,5 @@ Uint32 *newRender(int x)
 			// }
 		}
 	}
-	// for (size_t y = 1; y <= 32; y++, px += 4)
-	// {
-	// 	if (y <= 16){
-	// 		Voxel& v = c.GetVoxelByLocalCoordinate(x, y - 1);
-	// 		_CAVE_LIST cave = v.getCaves();
-	// 		for(auto& l : cave) {
-	// 			fillRectWith4x4(pixels, l.min.z * 4, px, (l.max.z - l.min.z) * 4, 4, 255);
-	// 		}
-	// 	}
-	// 	else {
-	// 		Voxel& v = d.GetVoxelByLocalCoordinate(x, y - 17);
-	// 		_CAVE_LIST cave = v.getCaves();
-	// 		for(auto& l : cave) {
-	// 			fillRectWith4x4(pixels, l.min.z * 4, px, (l.max.z - l.min.z) * 4, 4, 255);
-	// 		}
-	// 	}
-	// }
 	return pixels;
 }

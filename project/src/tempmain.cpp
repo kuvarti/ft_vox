@@ -3,6 +3,21 @@
 #include <unordered_map>
 #include <chrono>
 
+Uint32 *caveRender(int x);
+void doSomething(SDL_Renderer* renderer, int x, SDL_Texture* texture) {
+	if (x < 0) x = 0;
+	if (x >= 16) x = 15;
+
+	Uint32* pixels = caveRender(x);
+	SDL_UpdateTexture(texture, NULL, pixels, 800 * sizeof(Uint32));
+	delete pixels;
+	printf("X: %d\n", x);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_RenderClear(renderer);
+	SDL_RenderCopy(renderer, texture, NULL, NULL);
+	SDL_RenderPresent(renderer);
+}
+
 void deneme()
 {
 	const int start = -8192;

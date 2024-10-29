@@ -26,41 +26,41 @@ void TerrainGen::Generate(glm::vec2 start)
 			if (x == 0)
 			{
 				if (PGA::calcPerlin(start.x - 1, start.y + y) < z)
-					v.SetFace(VOXEL_FACE_WEST);
+					v.SetFace(VOXEL_FACE_NORTH);
 			}
 
 			if (x == l.x - 1)
 			{
 				if (PGA::calcPerlin(start.x + l.x, start.y + y) < z)
-					v.SetFace(VOXEL_FACE_EAST);
+					v.SetFace(VOXEL_FACE_SOUTH);
 			}
 			else
 			{
 				Voxel &Vnext = GetVoxelByLocalCoordinate(x + 1, y);
 				if (Vnext.Set_z(PGA::calcPerlin(start.x + x + 1, start.y + y)) < z)
-					v.SetFace(VOXEL_FACE_EAST);
+					v.SetFace(VOXEL_FACE_SOUTH);
 				else if (Vnext.Get_pos().z > z)
-					Vnext.SetFace(VOXEL_FACE_WEST);
+					Vnext.SetFace(VOXEL_FACE_NORTH);
 			}
 
 			if (y == 0)
 			{
 				if (PGA::calcPerlin(start.x + x, start.y - 1) < z)
-					v.SetFace(VOXEL_FACE_NORTH);
+					v.SetFace(VOXEL_FACE_WEST);
 			}
 
 			if (y == l.y - 1)
 			{
 				if (PGA::calcPerlin(start.x + x, start.y + l.y) < z)
-					v.SetFace(VOXEL_FACE_SOUTH);
+					v.SetFace(VOXEL_FACE_EAST);
 			}
 			else
 			{
 				Voxel &Vnext = GetVoxelByLocalCoordinate(x, y + 1);
 				if (Vnext.Set_z(PGA::calcPerlin(start.x + x, start.y + y + 1)) < z)
-					v.SetFace(VOXEL_FACE_SOUTH);
-				else if (Vnext.Get_pos().z > z)
-					Vnext.SetFace(VOXEL_FACE_NORTH);
+					v.SetFace(VOXEL_FACE_EAST);
+				else if (z < Vnext.Get_pos().z)
+					Vnext.SetFace(VOXEL_FACE_WEST);
 			}
 		}
 	}

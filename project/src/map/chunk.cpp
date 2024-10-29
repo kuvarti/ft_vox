@@ -121,7 +121,7 @@ void Chunk::PrintVoxelInfo()
 		{
 			_voxel = GetVoxelByLocalCoordinate(x, y);
 			printf("\tVoxel Local Pos: X:%ld, Y:%ld - Voxel Global Pos: (%d)-(%d)-(%d)\n",
-				   x, y, _voxel.Get_pos().x, _voxel.Get_pos().y, _voxel.Get_pos().z);
+				   x, y, (int)_voxel.Get_pos().x, (int)_voxel.Get_pos().y, (int)_voxel.Get_pos().z);
 			printf("\t\t\tFaces UP:%d - DOWN:%d - North:%d - South:%d - West:%d - East:%d\n\t\tCaves:\n",
 				   _voxel.IsUp(), _voxel.IsDown(), _voxel.IsNorth(), _voxel.IsSouth(), _voxel.IsWest(), _voxel.IsEast());
 

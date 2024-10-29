@@ -2,10 +2,13 @@
 #include "chunk.hpp"
 #include "VulkanApp.hpp"
 
+Env env;
 int main()
 {
+	Chunk a(320, 320);
 	srand(time(0));
 	env.seed = rand();
+	// env.seed = 1;
 	VulkanApp app;
 	try
 	{

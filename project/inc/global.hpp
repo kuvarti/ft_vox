@@ -36,4 +36,4 @@ namespace std {
 
 
 void doSomething(SDL_Renderer*, int, SDL_Texture*);
-void doSomething(SDL_Renderer* renderer, Terrain1 &t, SDL_Texture* texture);
+void doSomething(SDL_Renderer* renderer, Terrain &t, SDL_Texture* texture);

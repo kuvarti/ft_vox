@@ -11,10 +11,14 @@
             "id": "82a6c0f0b0c20636",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "§1 FLEETING/Config Dosyasi or Start Argumanlari.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "Config Dosyasi or Start Argumanlari"
             }
           }
         ]
@@ -167,6 +171,36 @@
       "obsidian-excalidraw-plugin:Create new drawing": false
     }
   },
-  "active": "82a6c0f0b0c20636",
-  "lastOpenFiles": []
+  "active": "490c5705c13df28b",
+  "lastOpenFiles": [
+    "§1 FLEETING/optimizasyon.md",
+    "§1 FLEETING/Output file instead of console..md",
+    "§6 ARCHIVES/GPTPromt/FilledCircleAlgorithm.md",
+    "§6 ARCHIVES/GPTPromt/FilledCircleAlgorithm.png",
+    "§3 RESOURCES/Midpoint Circle Algorith.md",
+    "§3 RESOURCES/GLM Doc.md",
+    "§2 PROJECT/Documents/Proc.Gen/Vulkan Notları.md",
+    "§2 PROJECT/Documents/Chunks.md",
+    "§2 PROJECT/Documents/Voxel.md",
+    "§2 PROJECT/HowToRun.md",
+    "§1 FLEETING/Calc terrain & Caves on threads.md",
+    "§1 FLEETING/Config Dosyasi or Start Argumanlari.md",
+    "§6 ARCHIVES/GPTPromt/FilledCircleAlgorithm.png~",
+    "§6 ARCHIVES/GPTPromt/output.png",
+    "Excalidraw/Pasted Image 20241030081009_733.png",
+    "Excalidraw/Drawing 2024-09-19 12.09.25.excalidraw.md",
+    "§6 ARCHIVES/GPTPromt",
+    "Excalidraw/Chunk-Terrain-Faces.md",
+    "Excalidraw/Chunk-Caves.md",
+    "§2 PROJECT/Project Subject.md",
+    "§3 RESOURCES/en.subject.pdf",
+    "§3 RESOURCES/Proc.Gen.Algos/Simplex Noise.md",
+    "§3 RESOURCES/Proc.Gen.Algos/Perlin Noise.md",
+    "§3 RESOURCES/Proc.Gen.Algos/Dot Product.md",
+    "§4 AREA/General ToDo List.md",
+    "§4 AREA/ChatGPT GorevPaylasimi.md",
+    "§4 AREA/Optimizasyon.md",
+    "§4 AREA/CanbanNotes/Proce... Generate - Ahmet.md",
+    "Pasted Image 20241030081009_733.png"
+  ]
 }

@@ -105,7 +105,7 @@ private:
 	std::vector<VkFence> inFlightFences;
 	size_t currentFrame = 0;
 	Controller controller;
-	Terrain terrain;
+	Terrain1 terrain;
 	const std::vector<const char *> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 	VkCommandPoolCreateInfo poolInfo = {};

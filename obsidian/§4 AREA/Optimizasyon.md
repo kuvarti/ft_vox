@@ -1,2 +1,0 @@
-- Caveler x+=5 ile hesaplanacak. 1 yanan blocklar icin yukari ve asagi gitmeye baslicak.
-- Cave-Max maximum terrain X olacak.

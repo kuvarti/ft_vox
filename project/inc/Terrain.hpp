@@ -7,13 +7,13 @@
 
 #define _CHUNK_LIST std::unordered_map<glm::vec2, Chunk *, Vec2Hash, Vec2Equal>
 
-class Terrain {
+class Terrain1 {
 public:
 	struct Vertex {
 		glm::vec3 position;
 	};
 
-	Terrain();
+	Terrain1();
 	const std::vector<Vertex>& getVertices() const;
 	const std::vector<uint16_t>& getIndices() const;
 
@@ -40,11 +40,11 @@ struct Vec2Equal {
 };
 
 class Chunk;
-class Terrain1 {
+class Terrain {
 public:
-	Terrain1();
-	Terrain1(glm::vec2);
-	~Terrain1();
+	Terrain();
+	Terrain(glm::vec2);
+	~Terrain();
 
 	const Chunk *GetChunkByGlobalPos(glm::vec2) const;
 

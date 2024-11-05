@@ -1,0 +1,2 @@
+- map manager can have offset with checking `_IsPivotMoved`
+- 

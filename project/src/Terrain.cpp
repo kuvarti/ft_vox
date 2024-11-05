@@ -3,7 +3,7 @@
 #include <iostream>
 #include <chrono>
 
-Terrain::Terrain()
+Terrain1::Terrain1()
 {
 	const int gridSize = 16;
 	const float cubeSize = 1.0f;
@@ -75,29 +75,28 @@ Terrain::Terrain()
 	}
 }
 
-const std::vector<Terrain::Vertex> &Terrain::getVertices() const
+const std::vector<Terrain1::Vertex> &Terrain1::getVertices() const
 {
 	return vertices;
 }
 
-const std::vector<uint16_t> &Terrain::getIndices() const
+const std::vector<uint16_t> &Terrain1::getIndices() const
 {
 	return indices;
 }
 
-Terrain1::Terrain1()
+Terrain::Terrain()
 {
-	printf("WARN: Terrain class has no pivot location.\n\t\tMap is not generated.");
+	std:: cout << "WARN: Terrain class has no pivot location.\n\t\tMap is not generated.";
 }
 
-Terrain1::Terrain1(glm::vec2 camera)
+Terrain::Terrain(glm::vec2 camera)
 {
 	_InitMap(camera);
 }
 
-Terrain1::~Terrain1()
+Terrain::~Terrain()
 {
-	printf("ChunkList Size: %d\n", _chunk_list.size());
 	auto it = _chunk_list.begin();
 	while (it != _chunk_list.end())
 	{
@@ -106,7 +105,7 @@ Terrain1::~Terrain1()
 	}
 }
 
-const Chunk *Terrain1::GetChunkByGlobalPos(glm::vec2 pos) const
+const Chunk *Terrain::GetChunkByGlobalPos(glm::vec2 pos) const
 {
 	auto ret = _chunk_list.find(glm::vec2((int)(pos.x / 16) * 16, (int)(pos.y / 16) * 16));
 	if (ret != _chunk_list.end())
@@ -116,7 +115,7 @@ const Chunk *Terrain1::GetChunkByGlobalPos(glm::vec2 pos) const
 	return nullptr;
 }
 
-bool Terrain1::UpdateMap(glm::vec2 camera)
+bool Terrain::UpdateMap(glm::vec2 camera)
 {
 	if (_IsPivotMoved(camera))
 	{
@@ -164,12 +163,12 @@ bool Terrain1::UpdateMap(glm::vec2 camera)
 	return false;
 }
 
-bool Terrain1::UpdateMap(glm::vec3 camera)
+bool Terrain::UpdateMap(glm::vec3 camera)
 {
 	return UpdateMap(glm::vec2(camera.x, camera.y));
 }
 
-void Terrain1::_InitMap(glm::vec2 camera)
+void Terrain::_InitMap(glm::vec2 camera)
 {
 	camera.x = (int)(camera.x / 16);
 	camera.y = (int)(camera.y / 16);
@@ -187,7 +186,7 @@ void Terrain1::_InitMap(glm::vec2 camera)
 	}
 }
 
-bool Terrain1::_IsPivotMoved(glm::vec2 c)
+bool Terrain::_IsPivotMoved(glm::vec2 c)
 {
 	if ((int)(_pivot.x) == (int)(c.x / 16) &&
 		(int)(_pivot.y) == (int)(c.y / 16))
@@ -202,16 +201,16 @@ bool Terrain1::_IsPivotMoved(glm::vec2 c)
 	return false;
 }
 
-void Terrain1::_AddChunk(int x, int y)
+void Terrain::_AddChunk(int x, int y)
 {
 	glm::vec2 pos(x, y);
 	if (_chunk_list.find(pos) == _chunk_list.end())
 	{
-		_chunk_list.emplace(pos, new Chunk(/*glm::vec2(x, y)*/));
+		_chunk_list.emplace(pos, new Chunk(glm::vec2(x, y)));
 	}
 }
 
-void Terrain1::_RemoveChunk(int x, int y)
+void Terrain::_RemoveChunk(int x, int y)
 {
 	glm::vec2 chunkPos(x, y);
 	auto it = _chunk_list.find(chunkPos);

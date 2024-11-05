@@ -2,13 +2,12 @@
 #include "Chunk.hpp"
 #include "VulkanApp.hpp"
 
-Env env;
-int main()
+#include <iostream>
+
+int main(int argc, char **argv)
 {
-	Chunk a(320, 320);
-	srand(time(0));
-	env.seed = rand();
-	// env.seed = 1;
+	if (!InitSettings(argv[1]))
+		return 1;
 	VulkanApp app;
 	try
 	{

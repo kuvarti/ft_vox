@@ -9,15 +9,12 @@
 #include <stdexcept>
 #include <array>
 #include <tuple>
+
 #include "Terrain.hpp"
+#include "Settings.hpp"
 
-class Env{
-public:
-	// Terrain1	mapManager;
-	int			seed;
-};
 
-extern Env env;
+
 namespace std {
 
 	template <>

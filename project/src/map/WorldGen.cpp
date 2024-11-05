@@ -66,9 +66,6 @@ void TerrainGen::Generate(glm::vec2 start)
 	}
 }
 
-// void TerrainGen::SetFaces() {
-// }
-
 /* ====== CaveGeneration ====== */
 
 CaveGen::CaveGen(glm::vec2 s) : WorldGen(s.x, s.y)
@@ -190,10 +187,24 @@ void CaveGen::SetFaces(_CAVE_LIST &list, int *next, unsigned char flag)
 int *CaveGen::GetColumns(double x, double y, double noiseScale)
 {
 	int *column = new int[145];
-	for (size_t k = 1; k <= 145; ++k)
+	size_t tmp;
+
+	for (size_t i = 0; i < 145; i++)
+		column[i] = 0;
+	for (size_t k = 0; k < 145; k += 5)
 	{
-		double zCoord = k * noiseScale;
-		column[k - 1] = PGA::calcPerlin(x, y, zCoord);
+		double zCoord = (k + 1) * noiseScale;
+		column[k] = PGA::calcPerlin(x, y, zCoord);
+		if (column[k] == 1) {
+			tmp = k;
+			do {
+				if (tmp == 0)
+					break;
+				tmp--;
+				zCoord = (tmp + 1) * noiseScale;
+				column[tmp] = PGA::calcPerlin(x, y, zCoord);
+			} while (column[tmp] == 1 && column[tmp - 1] == 0);
+		}
 	}
 	return column;
 }

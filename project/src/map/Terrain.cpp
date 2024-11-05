@@ -1,4 +1,5 @@
 #include "Terrain.hpp"
+#include "Settings.hpp"
 #include "Chunk.hpp"
 #include <iostream>
 #include <chrono>
@@ -124,34 +125,34 @@ bool Terrain::UpdateMap(glm::vec2 camera)
 		camera.y = (int)(camera.y / 16);
 		_pivot = camera;
 
-		for (int y = -CALC_RANGE; y <= CALC_RANGE; y++)
+		for (int y = -env->setting.CalcRange; y <= env->setting.CalcRange; y++)
 		{
-			for (int x = -CALC_RANGE; x <= CALC_RANGE; x++)
+			for (int x = -env->setting.CalcRange; x <= env->setting.CalcRange; x++)
 			{
-				if (x * x + y * y <= CALC_RANGE * CALC_RANGE)
+				if (x * x + y * y <= env->setting.CalcRange * env->setting.CalcRange)
 				{
 					int newX = _pivot.x + x;
 					int newY = _pivot.y + y;
 					int oldX = oldPivot.x + x;
 					int oldY = oldPivot.y + y;
-					if ((newX - oldPivot.x) * (newX - oldPivot.x) + (newY - oldPivot.y) * (newY - oldPivot.y) > CALC_RANGE * CALC_RANGE)
+					if ((newX - oldPivot.x) * (newX - oldPivot.x) + (newY - oldPivot.y) * (newY - oldPivot.y) > env->setting.CalcRange * env->setting.CalcRange)
 					{
 						_AddChunk(newX, newY);
 					}
 				}
 			}
 		}
-		for (int y = -CALC_RANGE; y <= CALC_RANGE; y++)
+		for (int y = -env->setting.CalcRange; y <= env->setting.CalcRange; y++)
 		{
-			for (int x = -CALC_RANGE; x <= CALC_RANGE; x++)
+			for (int x = -env->setting.CalcRange; x <= env->setting.CalcRange; x++)
 			{
-				if (x * x + y * y <= CALC_RANGE * CALC_RANGE)
+				if (x * x + y * y <= env->setting.CalcRange * env->setting.CalcRange)
 				{
 					int oldX = oldPivot.x + x;
 					int oldY = oldPivot.y + y;
 					int newX = _pivot.x + x;
 					int newY = _pivot.y + y;
-					if ((oldX - _pivot.x) * (oldX - _pivot.x) + (oldY - _pivot.y) * (oldY - _pivot.y) > CALC_RANGE * CALC_RANGE)
+					if ((oldX - _pivot.x) * (oldX - _pivot.x) + (oldY - _pivot.y) * (oldY - _pivot.y) > env->setting.CalcRange * env->setting.CalcRange)
 					{
 						_RemoveChunk(oldX, oldY);
 					}
@@ -174,11 +175,11 @@ void Terrain::_InitMap(glm::vec2 camera)
 	camera.y = (int)(camera.y / 16);
 
 	_pivot = camera;
-	for (int y = -CALC_RANGE; y <= CALC_RANGE; y++)
+	for (int y = -env->setting.CalcRange; y <= env->setting.CalcRange; y++)
 	{
-		for (int x = -CALC_RANGE; x <= CALC_RANGE; x++)
+		for (int x = -env->setting.CalcRange; x <= env->setting.CalcRange; x++)
 		{
-			if (x * x + y * y <= CALC_RANGE * CALC_RANGE)
+			if (x * x + y * y <= env->setting.CalcRange * env->setting.CalcRange)
 			{
 				_AddChunk(camera.x + x, camera.y + y);
 			}
@@ -193,10 +194,10 @@ bool Terrain::_IsPivotMoved(glm::vec2 c)
 		return false;
 
 	if ((c.x - 16 > _pivot.x + 2) ||
-		(c.x + 16 < _pivot.x + CHUNK_SIZE + 2))
+		(c.x + 16 < _pivot.x + env->setting.ChunkSize + 2))
 		return true;
 	if ((c.y - 16 > _pivot.y + 2) ||
-		(c.y + 16 < _pivot.y + CHUNK_SIZE + 2))
+		(c.y + 16 < _pivot.y + env->setting.ChunkSize + 2))
 		return true;
 	return false;
 }

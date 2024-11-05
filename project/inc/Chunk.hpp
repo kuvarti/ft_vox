@@ -2,11 +2,6 @@
 
 #include "WorldGen.hpp"
 
-#define GRID_SIZE 128
-#define CHUNK_SIZE 16
-
-#define CALC_RANGE 10
-
 class Chunk : public TerrainGen, public CaveGen
 {
 public:

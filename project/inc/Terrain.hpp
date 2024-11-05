@@ -52,6 +52,10 @@ public:
 		return _chunk_list;
 	}
 
+	size_t	GetChunkListSize() const {
+		return _chunk_list.size();
+	}
+
 	// Return `True` if _chunk_list updated.
 	bool UpdateMap(glm::vec2);
 	bool UpdateMap(glm::vec3);

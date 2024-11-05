@@ -1,5 +1,5 @@
 #include "ProceduralGenerationAlgorithms.hpp"
-#include "global.hpp"
+#include "Global.hpp"
 #include <math.h>
 
 glm::vec2 PGA::randomGradient(int ix, int iy)

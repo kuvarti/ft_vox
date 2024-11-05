@@ -1,5 +1,5 @@
-#include "global.hpp"
-#include "chunk.hpp"
+#include "Global.hpp"
+#include "Chunk.hpp"
 #include "VulkanApp.hpp"
 
 Env env;

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "worldGen.hpp"
+#include "WorldGen.hpp"
 
 #define GRID_SIZE 128
 #define CHUNK_SIZE 16

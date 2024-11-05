@@ -1,5 +1,5 @@
 #include "Terrain.hpp"
-#include "chunk.hpp"
+#include "Chunk.hpp"
 #include <iostream>
 #include <chrono>
 

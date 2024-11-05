@@ -1,5 +1,5 @@
-#include "chunk.hpp"
-#include "global.hpp"
+#include "Chunk.hpp"
+#include "Global.hpp"
 #include <unordered_map>
 #include <chrono>
 

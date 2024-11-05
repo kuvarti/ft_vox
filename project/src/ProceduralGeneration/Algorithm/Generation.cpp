@@ -1,5 +1,5 @@
 #include "ProceduralGenerationAlgorithms.hpp"
-#include "chunk.hpp"
+#include "Chunk.hpp"
 
 float PGA::perlinNoise2d(float x, float y)
 {

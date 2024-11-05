@@ -1,4 +1,4 @@
-#include "chunk.hpp"
+#include "Chunk.hpp"
 #include "ProceduralGenerationAlgorithms.hpp"
 #include "iostream"
 #include <chrono>

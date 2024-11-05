@@ -1,4 +1,4 @@
-#include "chunk.hpp"
+#include "Chunk.hpp"
 #include "unistd.h"
 
 int randomVoxel(int iv, int iy)

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "voxel.hpp"
+#include "Voxel.hpp"
 
 namespace PGA
 {

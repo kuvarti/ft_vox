@@ -1,4 +1,4 @@
-#include "worldGen.hpp"
+#include "WorldGen.hpp"
 #include "ProceduralGenerationAlgorithms.hpp"
 /* ====== TerrainGeneration ====== */
 

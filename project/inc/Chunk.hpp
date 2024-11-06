@@ -1,9 +1,6 @@
 #pragma once
 
-#include "worldGen.hpp"
-
-#define GRID_SIZE 128
-#define CHUNK_SIZE 16
+#include "WorldGen.hpp"
 
 class Chunk : public TerrainGen, public CaveGen
 {
@@ -26,7 +23,7 @@ protected:
 	{
 		TerrainGen::Generate(v);
 		CaveGen::Generate(v);
-		PrintVoxelInfo();
+		// PrintVoxelInfo();
 	}
 
 private:

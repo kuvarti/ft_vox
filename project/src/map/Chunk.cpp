@@ -1,37 +1,38 @@
-#include "chunk.hpp"
+#include "Chunk.hpp"
+#include "Settings.hpp"
 #include "ProceduralGenerationAlgorithms.hpp"
 #include "iostream"
 #include <chrono>
 #include <tuple>
 
-Chunk::Chunk() : TerrainGen(glm::vec2(CHUNK_SIZE, CHUNK_SIZE)),
-				 CaveGen(glm::vec2(CHUNK_SIZE, CHUNK_SIZE)),
-				 WorldGen(CHUNK_SIZE, CHUNK_SIZE)
+Chunk::Chunk() : TerrainGen(glm::vec2(env->setting.ChunkSize, env->setting.ChunkSize)),
+				 CaveGen(glm::vec2(env->setting.ChunkSize, env->setting.ChunkSize)),
+				 WorldGen(env->setting.ChunkSize, env->setting.ChunkSize)
 {
 	_startPoint.x = 0;
 	_startPoint.y = 0;
-	_length = CHUNK_SIZE;
+	_length = env->setting.ChunkSize;
 
 	std::cout << "Chunk::Chunk() Called" << std::endl;
 }
 
-Chunk::Chunk(glm::vec2 startPoint) : TerrainGen(glm::vec2(CHUNK_SIZE, CHUNK_SIZE)),
-									CaveGen(glm::vec2(CHUNK_SIZE, CHUNK_SIZE)),
-									WorldGen(CHUNK_SIZE, CHUNK_SIZE)
+Chunk::Chunk(glm::vec2 startPoint) : TerrainGen(glm::vec2(env->setting.ChunkSize, env->setting.ChunkSize)),
+									CaveGen(glm::vec2(env->setting.ChunkSize, env->setting.ChunkSize)),
+									WorldGen(env->setting.ChunkSize, env->setting.ChunkSize)
 {
 	_startPoint = startPoint;
-	_length = CHUNK_SIZE;
+	_length = env->setting.ChunkSize;
 
 	this->Generate(_startPoint);
 }
 
-Chunk::Chunk(float x, float y) : TerrainGen(glm::vec2(CHUNK_SIZE, CHUNK_SIZE)),
-								 CaveGen(glm::vec2(CHUNK_SIZE, CHUNK_SIZE)),
-								 WorldGen(CHUNK_SIZE, CHUNK_SIZE)
+Chunk::Chunk(float x, float y) : TerrainGen(glm::vec2(env->setting.ChunkSize, env->setting.ChunkSize)),
+								 CaveGen(glm::vec2(env->setting.ChunkSize, env->setting.ChunkSize)),
+								 WorldGen(env->setting.ChunkSize, env->setting.ChunkSize)
 {
 	_startPoint.x = x;
 	_startPoint.y = y;
-	_length = CHUNK_SIZE;
+	_length = env->setting.ChunkSize;
 
 	this->Generate(_startPoint);
 }
@@ -85,8 +86,8 @@ int ***Chunk::_GenerateCave()
 		map[i] = new int *[18];
 	for (size_t i = 0; i < 18; i++)
 	{
-		map[i] = new int *[GRID_SIZE];
-		for (int j = 0; j < GRID_SIZE; ++j)
+		map[i] = new int *[env->setting.GridSize];
+		for (int j = 0; j < env->setting.GridSize; ++j)
 		{
 			map[i][j] = new int[145];
 		}

@@ -9,15 +9,12 @@
 #include <stdexcept>
 #include <array>
 #include <tuple>
+
 #include "Terrain.hpp"
+#include "Settings.hpp"
 
-class Env{
-public:
-	// Terrain1	mapManager;
-	int			seed;
-};
 
-extern Env env;
+
 namespace std {
 
 	template <>
@@ -36,3 +33,4 @@ namespace std {
 
 
 void doSomething(SDL_Renderer*, int, SDL_Texture*);
+void doSomething(SDL_Renderer* renderer, Terrain &t, SDL_Texture* texture);

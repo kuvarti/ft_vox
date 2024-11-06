@@ -17,11 +17,6 @@
 #include "Controller.hpp"
 #include "Terrain.hpp"
 
-const int WIDTH = 800;
-const int HEIGHT = 600;
-
-const int MAX_FRAMES_IN_FLIGHT = 2;
-
 class VulkanApp
 {
 public:
@@ -105,7 +100,7 @@ private:
 	std::vector<VkFence> inFlightFences;
 	size_t currentFrame = 0;
 	Controller controller;
-	Terrain terrain;
+	Terrain1 terrain;
 	const std::vector<const char *> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 	VkCommandPoolCreateInfo poolInfo = {};

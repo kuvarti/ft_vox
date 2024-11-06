@@ -1,4 +1,6 @@
 #include "VulkanApp.hpp"
+#include "Settings.hpp"
+
 void VulkanApp::run()
 {
 	controller.setStartPoint(glm::vec3(0.0f, 100.0f, 5.0f), glm::vec3(0.0f, 0.0f, 0.0f));
@@ -15,7 +17,7 @@ void VulkanApp::initWindow()
 		throw std::runtime_error("Failed to initialize SDL");
 	}
 
-	window = SDL_CreateWindow("Vulkan", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, SDL_WINDOW_VULKAN);
+	window = SDL_CreateWindow("Vulkan", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, env->setting.ScreenWidth, env->setting.ScreenHeight, SDL_WINDOW_VULKAN);
 	if (!window)
 	{
 		throw std::runtime_error("Failed to create SDL window");
@@ -484,7 +486,7 @@ void VulkanApp::createSwapChain()
 
 	createInfo.imageFormat = VK_FORMAT_B8G8R8A8_SRGB;
 	createInfo.imageColorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
-	createInfo.imageExtent = {WIDTH, HEIGHT};
+	createInfo.imageExtent = {env->setting.ScreenWidth, env->setting.ScreenHeight};
 	createInfo.imageArrayLayers = 1;
 	createInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
 	createInfo.imageSharingMode = VK_SHARING_MODE_EXCLUSIVE;
@@ -842,9 +844,9 @@ void VulkanApp::createCommandBuffers()
 }
 void VulkanApp::createSyncObjects()
 {
-	imageAvailableSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-	renderFinishedSemaphores.resize(MAX_FRAMES_IN_FLIGHT);
-	inFlightFences.resize(MAX_FRAMES_IN_FLIGHT);
+	imageAvailableSemaphores.resize(env->setting.MaxFrameInFlight);
+	renderFinishedSemaphores.resize(env->setting.MaxFrameInFlight);
+	inFlightFences.resize(env->setting.MaxFrameInFlight);
 
 	VkSemaphoreCreateInfo semaphoreInfo = {};
 	semaphoreInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
@@ -853,7 +855,7 @@ void VulkanApp::createSyncObjects()
 	fenceInfo.sType = VK_STRUCTURE_TYPE_FENCE_CREATE_INFO;
 	fenceInfo.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
-	for (size_t i = 0; i < MAX_FRAMES_IN_FLIGHT; i++)
+	for (size_t i = 0; i < env->setting.MaxFrameInFlight; i++)
 	{
 		if (vkCreateSemaphore(device, &semaphoreInfo, nullptr, &imageAvailableSemaphores[i]) != VK_SUCCESS ||
 			vkCreateSemaphore(device, &semaphoreInfo, nullptr, &renderFinishedSemaphores[i]) != VK_SUCCESS ||
@@ -907,5 +909,5 @@ void VulkanApp::drawFrame()
 
 	vkQueuePresentKHR(presentQueue, &presentInfo);
 
-	currentFrame = (currentFrame + 1) % MAX_FRAMES_IN_FLIGHT;
+	currentFrame = (currentFrame + 1) % env->setting.MaxFrameInFlight;
 }

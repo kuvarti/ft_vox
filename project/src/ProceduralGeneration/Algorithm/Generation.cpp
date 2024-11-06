@@ -1,5 +1,6 @@
 #include "ProceduralGenerationAlgorithms.hpp"
-#include "chunk.hpp"
+#include "Settings.hpp"
+#include "Chunk.hpp"
 
 float PGA::perlinNoise2d(float x, float y)
 {
@@ -72,7 +73,7 @@ int PGA::calcPerlin(float x, float y)
 	float amp = 1.0;
 	for (int i = 0; i < 12; i++)
 	{
-		val += perlinNoise2d(x * freq / GRID_SIZE, y * freq / GRID_SIZE) * amp;
+		val += perlinNoise2d(x * freq / env->setting.GridSize, y * freq / env->setting.GridSize) * amp;
 		freq *= 2;
 		amp /= 2;
 	}
@@ -91,7 +92,7 @@ int PGA::calcPerlin(float x, float y, float z)
 	float frequency = 1.0;
 	for (int i = 0; i < 9; i++)
 	{
-		noiseValue += perlinNoise3d(x * frequency / GRID_SIZE, y * frequency / GRID_SIZE, z * frequency / GRID_SIZE) * amp;
+		noiseValue += perlinNoise3d(x * frequency / env->setting.GridSize, y * frequency / env->setting.GridSize, z * frequency / env->setting.GridSize) * amp;
 		frequency *= 2; // lacunarity controls frequency growth
 		amp *= 2;		// persistence controls amp decay
 	}

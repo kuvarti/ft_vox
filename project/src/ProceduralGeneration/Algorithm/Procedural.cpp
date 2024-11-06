@@ -1,5 +1,5 @@
 #include "ProceduralGenerationAlgorithms.hpp"
-#include "global.hpp"
+#include "Global.hpp"
 #include <math.h>
 
 glm::vec2 PGA::randomGradient(int ix, int iy)
@@ -12,7 +12,7 @@ glm::vec2 PGA::randomGradient(int ix, int iy)
 	b *= 1911520717;
 	a ^= b << s | b >> w - s;
 	a *= 2048419325;
-	a *= env.seed;
+	a *= env->setting.Seed;
 	float random = a * (3.14159265 / ~(~0u >> 1));
 
 	glm::vec2 v;
@@ -32,7 +32,7 @@ glm::vec3 PGA::randomGradient(int ix, int iy, int iz)
 	c ^= b << s | b >> (w - s);
 	c *= 2048419325;
 	a ^= c << s | c >> (w - s);
-	a *= env.seed;
+	a *= env->setting.Seed;
 	float random = a * (3.14159265 / ~(~0u >> 1));
 
 	glm::vec3 v;

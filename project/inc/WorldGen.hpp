@@ -1,5 +1,5 @@
 #pragma once
-#include "voxel.hpp"
+#include "Voxel.hpp"
 
 class WorldGen
 {

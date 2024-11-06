@@ -1,9 +1,10 @@
-#include "chunk.hpp"
-#include "global.hpp"
+#include "Chunk.hpp"
+#include "Global.hpp"
 #include <unordered_map>
 #include <chrono>
 
 Uint32 *caveRender(int x);
+Uint32 *chunkAreaRender(Terrain &t);
 void doSomething(SDL_Renderer* renderer, int x, SDL_Texture* texture) {
 	if (x < 0) x = 0;
 	if (x >= 16) x = 15;
@@ -12,6 +13,16 @@ void doSomething(SDL_Renderer* renderer, int x, SDL_Texture* texture) {
 	SDL_UpdateTexture(texture, NULL, pixels, 800 * sizeof(Uint32));
 	delete pixels;
 	printf("X: %d\n", x);
+	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_RenderClear(renderer);
+	SDL_RenderCopy(renderer, texture, NULL, NULL);
+	SDL_RenderPresent(renderer);
+}
+
+void doSomething(SDL_Renderer* renderer, Terrain &t, SDL_Texture* texture) {
+	Uint32* pixels = chunkAreaRender(t);
+	SDL_UpdateTexture(texture, NULL, pixels, 800 * sizeof(Uint32));
+	delete pixels;
 	SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
 	SDL_RenderClear(renderer);
 	SDL_RenderCopy(renderer, texture, NULL, NULL);
@@ -74,6 +85,20 @@ void fillRectWith4x4(Uint32 *a, int x, int y, int w, int h, int color)
 	}
 }
 
+Uint32 *chunkAreaRender(Terrain &t)
+{
+	Uint32 *pixels = new Uint32[800 * 800];
+	size_t px = 10;
+	for (size_t i = 0; i < 800 * 800; i++)
+	{
+		pixels[i] = 0;
+	}
+	for (auto& c: t.GetAllChunks())
+	{
+		fillRectWith4x4(pixels, c.first.x * 8, c.first.y * 8, 8, 8, 255);
+	}
+	return pixels;
+}
 
 Uint32 *caveRender(int x)
 {

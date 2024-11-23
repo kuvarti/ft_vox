@@ -17,8 +17,8 @@ Chunk::Chunk() : TerrainGen(glm::vec2(env->setting.ChunkSize, env->setting.Chunk
 }
 
 Chunk::Chunk(glm::vec2 startPoint) : TerrainGen(glm::vec2(env->setting.ChunkSize, env->setting.ChunkSize)),
-									CaveGen(glm::vec2(env->setting.ChunkSize, env->setting.ChunkSize)),
-									WorldGen(env->setting.ChunkSize, env->setting.ChunkSize)
+									 CaveGen(glm::vec2(env->setting.ChunkSize, env->setting.ChunkSize)),
+									 WorldGen(env->setting.ChunkSize, env->setting.ChunkSize)
 {
 	_startPoint = startPoint;
 	_length = env->setting.ChunkSize;
@@ -39,6 +39,8 @@ Chunk::Chunk(float x, float y) : TerrainGen(glm::vec2(env->setting.ChunkSize, en
 
 Chunk::~Chunk()
 {
+	_vertices.clear();
+	_indices.clear();
 }
 
 void Chunk::ChangeStartPosition(glm::vec2 v)
@@ -67,49 +69,108 @@ Voxel Chunk::GetVoxelbyGlobalCoordinate(int x, int y) const
 		return GetVoxelByLocalCoordinate(x - _startPoint.x, y - _startPoint.y);
 }
 
-void mapfree(int **m, size_t size)
-{
-	for (size_t i = 0; i < size; ++i)
-	{
-		delete[] m[i];
-	}
-	delete[] m;
-}
+#define C_UINT16(A) (u_int16_t)(A)
 
-int ***Chunk::_GenerateCave()
+void Chunk::InitIdices()
 {
+	_vertices.clear();
+	_indices.clear();
+	int vertexIndex = 0;
 
-	auto startTime = std::chrono::high_resolution_clock::now();
-	int ***map;
-	map = new int **[18];
-	for (size_t i = 0; i < 18; i++)
-		map[i] = new int *[18];
-	for (size_t i = 0; i < 18; i++)
+	for (size_t x = 0; x < _length; x++)
 	{
-		map[i] = new int *[env->setting.GridSize];
-		for (int j = 0; j < env->setting.GridSize; ++j)
+		for (size_t y = 0; y < _length; y++)
 		{
-			map[i][j] = new int[145];
-		}
-	}
-	const double noiseScale = 0.05;
-	for (int k = 0; k < 145; ++k)
-	{
-		double zCoord = k * noiseScale;
-		for (int i = 0; i < 16; ++i)
-		{
-			double xCoord = ((_startPoint.x - 1) * 16 + i) * noiseScale;
-			for (int j = 0; j < 16; ++j)
+			Voxel voxel = GetVoxelByLocalCoordinate(x, y);
+			std::vector<glm::vec3> cubeVertices;
+
+			glm::vec3 vPos = voxel.Get_pos();
+			if (voxel.IsUp())
 			{
-				double yCoord = ((_startPoint.y - 1) * 16 + j) * noiseScale;
-				map[i][j][k] = PGA::calcPerlin(xCoord, yCoord, zCoord);
+				cubeVertices.emplace_back(vPos + glm::vec3(-env->setting.halfCubeSize, -env->setting.halfCubeSize, env->setting.halfCubeSize)); // 4: kuzey, bati, ust
+				cubeVertices.emplace_back(vPos + glm::vec3(env->setting.halfCubeSize, -env->setting.halfCubeSize, env->setting.halfCubeSize));	// 5: guney, bati, ust
+				cubeVertices.emplace_back(vPos + glm::vec3(env->setting.halfCubeSize, env->setting.halfCubeSize, env->setting.halfCubeSize));	// 6: guney, dogu, ust
+				cubeVertices.emplace_back(vPos + glm::vec3(-env->setting.halfCubeSize, env->setting.halfCubeSize, env->setting.halfCubeSize));	// 7: kuzey, dogu, ust
 			}
+			if (voxel.IsDown())
+			{
+				cubeVertices.emplace_back(vPos + glm::vec3(-env->setting.halfCubeSize, -env->setting.halfCubeSize, -env->setting.halfCubeSize)); // 0: kuzey, bati, alt
+				cubeVertices.emplace_back(vPos + glm::vec3(env->setting.halfCubeSize, -env->setting.halfCubeSize, -env->setting.halfCubeSize));	 // 1: guney, bati, alt
+				cubeVertices.emplace_back(vPos + glm::vec3(env->setting.halfCubeSize, env->setting.halfCubeSize, -env->setting.halfCubeSize));	 // 2: guney, dogu, alt
+				cubeVertices.emplace_back(vPos + glm::vec3(-env->setting.halfCubeSize, env->setting.halfCubeSize, -env->setting.halfCubeSize));	 // 3: kuzey, dogu, alt
+			}
+			if (voxel.IsNorth())
+			{
+				if (voxel.IsUp())
+				{
+					cubeVertices.emplace_back(vPos + glm::vec3(-env->setting.halfCubeSize, -env->setting.halfCubeSize, -env->setting.halfCubeSize)); // 0: kuzey, bati, alt
+					cubeVertices.emplace_back(vPos + glm::vec3(-env->setting.halfCubeSize, env->setting.halfCubeSize, -env->setting.halfCubeSize));	 // 3: kuzey, dogu, alt
+				}
+				if (voxel.IsDown())
+				{
+					cubeVertices.emplace_back(vPos + glm::vec3(-env->setting.halfCubeSize, -env->setting.halfCubeSize, env->setting.halfCubeSize)); // 4: kuzey, bati, ust
+					cubeVertices.emplace_back(vPos + glm::vec3(-env->setting.halfCubeSize, env->setting.halfCubeSize, env->setting.halfCubeSize));	// 7: kuzey, dogu, ust
+				}
+			}
+			if (voxel.IsSouth())
+			{
+				if (voxel.IsUp())
+				{
+					cubeVertices.emplace_back(vPos + glm::vec3(env->setting.halfCubeSize, -env->setting.halfCubeSize, -env->setting.halfCubeSize)); // 1: guney, bati, alt
+					cubeVertices.emplace_back(vPos + glm::vec3(env->setting.halfCubeSize, env->setting.halfCubeSize, -env->setting.halfCubeSize));	// 2: guney, dogu, alt
+				}
+				if (voxel.IsDown())
+				{
+					cubeVertices.emplace_back(vPos + glm::vec3(env->setting.halfCubeSize, -env->setting.halfCubeSize, env->setting.halfCubeSize)); // 5: guney, bati, ust
+					cubeVertices.emplace_back(vPos + glm::vec3(env->setting.halfCubeSize, env->setting.halfCubeSize, env->setting.halfCubeSize));  // 6: guney, dogu, ust
+				}
+			}
+			if (voxel.IsWest())
+			{
+				if (voxel.IsUp())
+				{
+					cubeVertices.emplace_back(vPos + glm::vec3(-env->setting.halfCubeSize, -env->setting.halfCubeSize, -env->setting.halfCubeSize)); // 0: kuzey, bati, alt
+					cubeVertices.emplace_back(vPos + glm::vec3(env->setting.halfCubeSize, -env->setting.halfCubeSize, -env->setting.halfCubeSize));	 // 1: guney, bati, alt
+				}
+				if (voxel.IsDown())
+				{
+					cubeVertices.emplace_back(vPos + glm::vec3(-env->setting.halfCubeSize, -env->setting.halfCubeSize, env->setting.halfCubeSize)); // 4: kuzey, bati, ust
+					cubeVertices.emplace_back(vPos + glm::vec3(env->setting.halfCubeSize, -env->setting.halfCubeSize, env->setting.halfCubeSize));	// 5: guney, bati, ust
+				}
+			}
+			if (voxel.IsEast())
+			{
+				if (voxel.IsUp())
+				{
+					cubeVertices.emplace_back(vPos + glm::vec3(env->setting.halfCubeSize, env->setting.halfCubeSize, -env->setting.halfCubeSize));	// 2: guney, dogu, alt
+					cubeVertices.emplace_back(vPos + glm::vec3(-env->setting.halfCubeSize, env->setting.halfCubeSize, -env->setting.halfCubeSize)); // 3: kuzey, dogu, alt
+				}
+				if (voxel.IsDown())
+				{
+					cubeVertices.emplace_back(vPos + glm::vec3(env->setting.halfCubeSize, env->setting.halfCubeSize, env->setting.halfCubeSize));  // 6: guney, dogu, ust
+					cubeVertices.emplace_back(vPos + glm::vec3(-env->setting.halfCubeSize, env->setting.halfCubeSize, env->setting.halfCubeSize)); // 7: kuzey, dogu, ust
+				}
+			}
+			_vertices.insert(_vertices.end(), cubeVertices.begin(), cubeVertices.end());
+
+			std::vector<uint16_t> cubeIndices = {
+				C_UINT16(vertexIndex), C_UINT16(vertexIndex + 1), C_UINT16(vertexIndex + 2),
+				C_UINT16(vertexIndex), C_UINT16(vertexIndex + 2), C_UINT16(vertexIndex + 3), // Arka yüz
+				C_UINT16(vertexIndex + 4), C_UINT16(vertexIndex + 5), C_UINT16(vertexIndex + 6),
+				C_UINT16(vertexIndex + 4), C_UINT16(vertexIndex + 6), C_UINT16(vertexIndex + 7), // Ön yüz
+				C_UINT16(vertexIndex + 3), C_UINT16(vertexIndex + 2), C_UINT16(vertexIndex + 6),
+				C_UINT16(vertexIndex + 3), C_UINT16(vertexIndex + 6), C_UINT16(vertexIndex + 7), // Üst yüz
+				C_UINT16(vertexIndex), C_UINT16(vertexIndex + 1), C_UINT16(vertexIndex + 5),
+				C_UINT16(vertexIndex), C_UINT16(vertexIndex + 5), C_UINT16(vertexIndex + 4), // Alt yüz
+				C_UINT16(vertexIndex + 1), C_UINT16(vertexIndex + 2), C_UINT16(vertexIndex + 6),
+				C_UINT16(vertexIndex + 1), C_UINT16(vertexIndex + 6), C_UINT16(vertexIndex + 5), // Sağ yüz
+				C_UINT16(vertexIndex + 0), C_UINT16(vertexIndex + 3), C_UINT16(vertexIndex + 7),
+				C_UINT16(vertexIndex + 0), C_UINT16(vertexIndex + 7), C_UINT16(vertexIndex + 4) // Sol yüz
+			};
+			_indices.insert(_indices.end(), cubeIndices.begin(), cubeIndices.end());
+			vertexIndex += 8;
 		}
 	}
-	auto endTime = std::chrono::high_resolution_clock::now();
-	auto duration = std::chrono::duration_cast<std::chrono::milliseconds>(endTime - startTime).count();
-	std::cout << "Cavegen Time taken: " << duration << " milliseconds" << std::endl;
-	return map;
 }
 
 void Chunk::PrintVoxelInfo()

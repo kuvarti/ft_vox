@@ -1,6 +1,7 @@
 #pragma once
 
 #include "WorldGen.hpp"
+#include <vector>
 
 class Chunk : public TerrainGen, public CaveGen
 {
@@ -13,7 +14,13 @@ public:
 	void ChangeStartPosition(glm::vec2);
 	Voxel GetVoxelbyGlobalCoordinate(glm::vec2) const;
 	Voxel GetVoxelbyGlobalCoordinate(int, int) const;
-	int ***_GenerateCave(); // todo this gonna be private
+
+	const std::vector<glm::vec3>getVertices() const{
+		return _vertices;
+	};
+	const std::vector<uint16_t>& getIndices() const{
+		return _indices;
+	};
 
 	_CAVE_LIST GetCaves() { return GetCaves(); }
 	void PrintVoxelInfo();
@@ -23,10 +30,14 @@ protected:
 	{
 		TerrainGen::Generate(v);
 		CaveGen::Generate(v);
-		// PrintVoxelInfo();
+		this->InitIdices();
 	}
 
 private:
-	glm::vec2 _startPoint;
+	void	InitIdices();
+
+	std::vector<uint16_t>	_indices;
+	std::vector<glm::vec3>	_vertices;
+	glm::vec2				_startPoint;
 	int _length;
 };

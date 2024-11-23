@@ -64,10 +64,10 @@ private:
 		glm::mat4 projection;
 	};
 
-	struct Vertex
-	{
-		glm::vec3 position;
-	};
+	// struct Vertex
+	// {
+	// 	glm::vec3 position;
+	// };
 
 	SDL_Window *window;
 	VkInstance instance;
@@ -100,7 +100,7 @@ private:
 	std::vector<VkFence> inFlightFences;
 	size_t currentFrame = 0;
 	Controller controller;
-	Terrain1 terrain;
+	Terrain terrain;
 	const std::vector<const char *> deviceExtensions = {
 		VK_KHR_SWAPCHAIN_EXTENSION_NAME};
 	VkCommandPoolCreateInfo poolInfo = {};
